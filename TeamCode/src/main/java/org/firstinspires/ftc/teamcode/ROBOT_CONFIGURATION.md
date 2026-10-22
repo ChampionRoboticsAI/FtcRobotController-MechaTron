@@ -29,8 +29,8 @@ We are using two [Logitech F310](https://www.amazon.com/dp/B003VAHYQY) wired con
 
 - Motors
   - Port 0: Intake (GoBuilda 5202/3/4 series)
-  - Port 1: Front Right (GoBuilda 5202/3/4 series)
-  - Port 2: Back Right (GoBuilda 5202/3/4 series)
+  - Port 1: Back Left (GoBuilda 5202/3/4 series)
+  - Port 2: Front Left (GoBuilda 5202/3/4 series)
 
 - Servos
   - port 0: Flower Thing (Servo)
@@ -44,8 +44,8 @@ We are using two [Logitech F310](https://www.amazon.com/dp/B003VAHYQY) wired con
 
 - Motors 
   - Port 0: Shooter (GoBuilda 5202/3/4 series)
-  - Port 1: Front Left (GoBuilda 5202/3/4 series)
-  - Port 2: Back Left (GoBuilda 5202/3/4 series)
+  - Port 1: Back Right (GoBuilda 5202/3/4 series)
+  - Port 2: Front Right (GoBuilda 5202/3/4 series)
 
 - Servos
   - Port 0: Right Flower (Servo)

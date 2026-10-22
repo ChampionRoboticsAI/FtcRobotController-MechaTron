@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Robot-centric TeleOp for the goBILDA StarterBot with Mecanum wheels.
  * Hardware is described in ROBOT_CONFIGURATION.md:
  *
- *   Control Hub   motor port 1: "Front Right"    motor port 2: "Back Right"
- *   Expansion Hub motor port 1: "Front Left"     motor port 2: "Back Left"
+ *   Control Hub   motor port 1: "Back Left"      motor port 2: "Front Left"
+ *   Expansion Hub motor port 1: "Back Right"     motor port 2: "Front Right"
  *
  * Driven with gamepad1 (Logitech F310, switch on the back set to "X"):
  *
