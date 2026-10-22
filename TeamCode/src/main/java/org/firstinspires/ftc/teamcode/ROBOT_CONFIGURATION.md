@@ -2,10 +2,14 @@
 
 This documents contains all of the hardware and mechanical configuraiton details for the FTC robot.
 
+Primary documentation for FTC is available at https://ftc-docs.firstinspires.org/en/latest/index.html
+
 ## StarterBot details
 
 The robot base structure is build using [goBuilda StarterBot](https://www.gobilda.com/ftc-starter-bot-resource-guide-2026-2027-season/).
 The robot has been further modified to use the Mecanum wheel described in [this instructions](https://www.gobilda.com/ftc-starterbot-with-mecanum-wheels-resource-guide-2026-2027/).
+
+Mecannum Drive example code is available at https://ftc-tech-toolbox.vercel.app/docs/Commonly%20Programmed%20Modules/Mec
 
 ## Robot Controller and Driver devices
 
