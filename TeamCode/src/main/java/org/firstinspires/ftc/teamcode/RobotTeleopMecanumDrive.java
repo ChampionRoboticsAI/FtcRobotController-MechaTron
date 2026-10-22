@@ -18,6 +18,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * 2) Lateral:  Strafing right and left                     Left-joystick Right and Left
  * 3) Yaw:      Rotating Clockwise and counter clockwise    Right-joystick Right and Left
  * 4) Slow mode: hold Left Bumper to drive at reduced speed for precise positioning.
+ * 5) Motor test: hold Back and press X (front left), A (back left), Y (front right),
+ *    B (back right) to run one wheel at a time.
+ *
+ * If the robot rotates when strafing but drives and turns correctly, either the Mecanum
+ * rollers do not form an "X" when viewed from above (swap the wheels), or the front and
+ * back motors on one side are swapped (fix the names in the robot configuration).
  *
  * The left-side motors are reversed so that positive power drives the robot forward.
  * When you first test the robot, if any wheel spins backward when the left stick is pushed
@@ -84,7 +90,18 @@ public class RobotTeleopMecanumDrive extends LinearOpMode {
                 backRightPower  /= max;
             }
 
-            double speedScale = gamepad1.left_bumper ? SLOW_MODE_SCALE : 1.0;
+            // Motor test mode: hold BACK and press X/A/Y/B to run a single wheel forward.
+            // Used to verify each configured name drives the wheel at that corner of the robot,
+            // and that it spins in the direction that pushes the robot forward.
+            boolean motorTest = gamepad1.back;
+            if (motorTest) {
+                frontLeftPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
+                backLeftPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
+                frontRightPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
+                backRightPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
+            }
+
+            double speedScale = (gamepad1.left_bumper || motorTest) ? SLOW_MODE_SCALE : 1.0;
 
             frontLeftDrive.setPower(frontLeftPower * speedScale);
             frontRightDrive.setPower(frontRightPower * speedScale);
@@ -92,7 +109,8 @@ public class RobotTeleopMecanumDrive extends LinearOpMode {
             backRightDrive.setPower(backRightPower * speedScale);
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Speed", speedScale < 1.0 ? "SLOW" : "FULL");
+            telemetry.addData("Speed", motorTest ? "MOTOR TEST (X=FL A=BL Y=FR B=BR)"
+                                                 : speedScale < 1.0 ? "SLOW" : "FULL");
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower * speedScale, frontRightPower * speedScale);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower * speedScale, backRightPower * speedScale);
             telemetry.update();
