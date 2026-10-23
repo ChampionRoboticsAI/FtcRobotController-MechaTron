@@ -11,7 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  *   Control Hub   motor port 1: "Back Left"      motor port 2: "Front Left"
  *   Expansion Hub motor port 1: "Back Right"     motor port 2: "Front Right"
- *   Control Hub   motor port 0: "Intake"         Expansion Hub motor port 3: "Midtake"
+ *   Expansion Hub motor port 0: "Intake"         motor port 3: "Midtake"
+ *   Control Hub   motor port 0: "Shooter"
  *
  * Driven with gamepad1 (Logitech F310, switch on the back set to "X"):
  *
@@ -22,6 +23,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * 5) Motor test: hold Back and press X (front left), A (back left), Y (front right),
  *    B (back right) to run one wheel at a time.
  * 6) Intake + Midtake: push Right Trigger (RT); motor speed follows how far it is pushed.
+ * 7) Intake only: hold A to run the Intake at full power.
+ *    Hold Right Bumper (RB) to run the Intake in reverse (overrides A and RT).
+ * 8) Shooter: hold B to run the Shooter at full power; it coasts to a stop when released.
  *
  * If the robot rotates when strafing but drives and turns correctly, either the Mecanum
  * rollers do not form an "X" when viewed from above (swap the wheels), or the front and
@@ -45,6 +49,7 @@ public class RobotTeleopMecanumDrive extends LinearOpMode {
     private DcMotor backRightDrive = null;
     private DcMotor intake = null;
     private DcMotor midtake = null;
+    private DcMotor shooter = null;
 
     @Override
     public void runOpMode() {
@@ -69,12 +74,18 @@ public class RobotTeleopMecanumDrive extends LinearOpMode {
         // If either roller pushes game pieces out instead of pulling them in, flip its direction.
         intake = hardwareMap.get(DcMotor.class, "Intake");
         midtake = hardwareMap.get(DcMotor.class, "Midtake");
-        intake.setDirection(DcMotor.Direction.FORWARD);
+        intake.setDirection(DcMotor.Direction.REVERSE);
         midtake.setDirection(DcMotor.Direction.FORWARD);
         for (DcMotor motor : new DcMotor[] {intake, midtake}) {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
+
+        // FLOAT lets the flywheel spin down on its own instead of braking hard.
+        shooter = hardwareMap.get(DcMotor.class, "Shooter");
+        shooter.setDirection(DcMotor.Direction.FORWARD);
+        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -123,16 +134,27 @@ public class RobotTeleopMecanumDrive extends LinearOpMode {
             backRightDrive.setPower(backRightPower * speedScale);
 
             // Right trigger reads 0.0 (released) to 1.0 (fully pushed).
-            double intakePower = gamepad1.right_trigger;
+            double midtakePower = gamepad1.right_trigger;
+            // Holding A runs only the Intake at full power (ignored during motor test, where A is a wheel).
+            double intakePower = (gamepad1.a && !motorTest) ? 1.0 : midtakePower;
+            // Holding RB reverses the Intake at full power to spit game pieces back out.
+            if (gamepad1.right_bumper) {
+                intakePower = -1.0;
+            }
             intake.setPower(intakePower);
-            midtake.setPower(intakePower);
+            midtake.setPower(midtakePower);
+
+            // Holding B runs the Shooter (ignored during motor test, where B is a wheel).
+            double shooterPower = (gamepad1.b && !motorTest) ? 1.0 : 0.0;
+            shooter.setPower(shooterPower);
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Speed", motorTest ? "MOTOR TEST (X=FL A=BL Y=FR B=BR)"
                                                  : speedScale < 1.0 ? "SLOW" : "FULL");
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower * speedScale, frontRightPower * speedScale);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower * speedScale, backRightPower * speedScale);
-            telemetry.addData("Intake/Midtake", "%4.2f", intakePower);
+            telemetry.addData("Intake/Midtake", "%4.2f, %4.2f", intakePower, midtakePower);
+            telemetry.addData("Shooter", "%4.2f", shooterPower);
             telemetry.update();
         }
     }

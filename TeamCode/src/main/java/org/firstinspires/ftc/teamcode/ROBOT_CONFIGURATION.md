@@ -28,7 +28,7 @@ We are using two [Logitech F310](https://www.amazon.com/dp/B003VAHYQY) wired con
 ## Controller Hub port mapping
 
 - Motors
-  - Port 0: Intake (GoBuilda 5202/3/4 series)
+  - Port 0: Shooter (GoBuilda 5202/3/4 series)
   - Port 1: Back Left (GoBuilda 5202/3/4 series)
   - Port 2: Front Left (GoBuilda 5202/3/4 series)
 
@@ -43,7 +43,7 @@ We are using two [Logitech F310](https://www.amazon.com/dp/B003VAHYQY) wired con
 ## Expansion Hub port mapping
 
 - Motors 
-  - Port 0: Shooter (GoBuilda 5202/3/4 series)
+  - Port 0: Intake (GoBuilda 5202/3/4 series)
   - Port 1: Back Right (GoBuilda 5202/3/4 series)
   - Port 2: Front Right (GoBuilda 5202/3/4 series)
   - Port 3: Midtake (GoBuilda 5202/3/4 series)
@@ -51,4 +51,3 @@ We are using two [Logitech F310](https://www.amazon.com/dp/B003VAHYQY) wired con
 - Servos
   - Port 0: Right Flower (Servo)
 
-  
