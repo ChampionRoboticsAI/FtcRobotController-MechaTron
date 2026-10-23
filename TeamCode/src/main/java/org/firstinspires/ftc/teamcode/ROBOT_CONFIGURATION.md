@@ -33,7 +33,7 @@ We are using two [Logitech F310](https://www.amazon.com/dp/B003VAHYQY) wired con
   - Port 2: Front Left (GoBuilda 5202/3/4 series)
 
 - Servos
-  - port 0: Flower Thing (Servo)
+  - port 0: Left Flower (Servo)
 
 - I2C Bus 0
   - Port 0: imu (REV internal IMU (BHI260AP))
@@ -46,6 +46,9 @@ We are using two [Logitech F310](https://www.amazon.com/dp/B003VAHYQY) wired con
   - Port 0: Shooter (GoBuilda 5202/3/4 series)
   - Port 1: Back Right (GoBuilda 5202/3/4 series)
   - Port 2: Front Right (GoBuilda 5202/3/4 series)
+  - Port 3: Midtake (GoBuilda 5202/3/4 series)
 
 - Servos
   - Port 0: Right Flower (Servo)
+
+  

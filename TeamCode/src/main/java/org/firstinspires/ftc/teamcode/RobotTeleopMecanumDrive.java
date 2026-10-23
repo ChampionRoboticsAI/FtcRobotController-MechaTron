@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  *   Control Hub   motor port 1: "Back Left"      motor port 2: "Front Left"
  *   Expansion Hub motor port 1: "Back Right"     motor port 2: "Front Right"
+ *   Control Hub   motor port 0: "Intake"         Expansion Hub motor port 3: "Midtake"
  *
  * Driven with gamepad1 (Logitech F310, switch on the back set to "X"):
  *
@@ -20,6 +21,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * 4) Slow mode: hold Left Bumper to drive at reduced speed for precise positioning.
  * 5) Motor test: hold Back and press X (front left), A (back left), Y (front right),
  *    B (back right) to run one wheel at a time.
+ * 6) Intake + Midtake: push Right Trigger (RT); motor speed follows how far it is pushed.
  *
  * If the robot rotates when strafing but drives and turns correctly, either the Mecanum
  * rollers do not form an "X" when viewed from above (swap the wheels), or the front and
@@ -41,6 +43,8 @@ public class RobotTeleopMecanumDrive extends LinearOpMode {
     private DcMotor backLeftDrive = null;
     private DcMotor frontRightDrive = null;
     private DcMotor backRightDrive = null;
+    private DcMotor intake = null;
+    private DcMotor midtake = null;
 
     @Override
     public void runOpMode() {
@@ -58,6 +62,16 @@ public class RobotTeleopMecanumDrive extends LinearOpMode {
 
         // Drive purely on joystick power, and hold position when the sticks are released.
         for (DcMotor motor : new DcMotor[] {frontLeftDrive, backLeftDrive, frontRightDrive, backRightDrive}) {
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+
+        // If either roller pushes game pieces out instead of pulling them in, flip its direction.
+        intake = hardwareMap.get(DcMotor.class, "Intake");
+        midtake = hardwareMap.get(DcMotor.class, "Midtake");
+        intake.setDirection(DcMotor.Direction.FORWARD);
+        midtake.setDirection(DcMotor.Direction.FORWARD);
+        for (DcMotor motor : new DcMotor[] {intake, midtake}) {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
@@ -108,11 +122,17 @@ public class RobotTeleopMecanumDrive extends LinearOpMode {
             backLeftDrive.setPower(backLeftPower * speedScale);
             backRightDrive.setPower(backRightPower * speedScale);
 
+            // Right trigger reads 0.0 (released) to 1.0 (fully pushed).
+            double intakePower = gamepad1.right_trigger;
+            intake.setPower(intakePower);
+            midtake.setPower(intakePower);
+
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Speed", motorTest ? "MOTOR TEST (X=FL A=BL Y=FR B=BR)"
                                                  : speedScale < 1.0 ? "SLOW" : "FULL");
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower * speedScale, frontRightPower * speedScale);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower * speedScale, backRightPower * speedScale);
+            telemetry.addData("Intake/Midtake", "%4.2f", intakePower);
             telemetry.update();
         }
     }
