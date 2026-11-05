@@ -64,6 +64,10 @@ The Driver Hub shows:
 - **Front left/Right**, **Back left/Right**: power sent to each wheel
 - **Intake/Midtake**: power sent to each motor (negative means reverse)
 - **Shooter**: power sent to the shooter
+- **Encoder FL/FR**, **Encoder BL/BR**: raw counts on each drive motor's encoder port (odometry pods)
+
+Intake, Midtake and Shooter are optional. If one isn't in the robot configuration, init shows
+it as `not configured`, its controls do nothing, and its telemetry line is hidden.
 
 ## Free Buttons
 

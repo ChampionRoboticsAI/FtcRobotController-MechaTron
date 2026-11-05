@@ -26,8 +26,13 @@ All the devices are configured and connected as per the [official documentation]
 We are using two [Logitech F310](https://www.amazon.com/dp/B003VAHYQY) wired controller gamepad. These two Gamepads will be connected via USB to the REV Driver Hub.
 
 ## Controller Hub port mapping
-
 - Motors
+    - Port 0: Back Left (GoBuilda 5202/3/4 series)
+    - Port 1: Front Left (GoBuilda 5202/3/4 series)
+    - Port 2: Front Right (GoBuilda 5202/3/4 series)
+    - Port 3: Back Right (GoBuilda 5202/3/4 series)
+
+<!-- - Motors
   - Port 0: Shooter (GoBuilda 5202/3/4 series)
   - Port 1: Back Left (GoBuilda 5202/3/4 series)
   - Port 2: Front Left (GoBuilda 5202/3/4 series)
@@ -49,5 +54,29 @@ We are using two [Logitech F310](https://www.amazon.com/dp/B003VAHYQY) wired con
   - Port 3: Midtake (GoBuilda 5202/3/4 series)
 
 - Servos
-  - Port 0: Right Flower (Servo)
+  - Port 0: Right Flower (Servo) -->
 
+## PedroPathing
+
+Pedro Pathing [documentation](https://pedropathing.com/docs/pathing)
+Pedro Pathing [GitHub](https://github.com/Pedro-Pathing/PedroPathing)
+
+[goBuilda 4-Bar Odometry Pod](https://www.gobilda.com/4-bar-odometry-pod-32mm-wheel/)
+
+### Odometry
+
+The robot uses two goBILDA 4-Bar Odometry Pods (32mm omni wheel, 2000 counts per revolution, 4-pos JST PH)
+with the Control Hub IMU, which is Pedro Pathing's **Two Wheel** localizer.
+
+- Forward pod: mounted parallel to the wheels, measures forward/backward travel.
+- Strafe pod: mounted perpendicular to the wheels, measures left/right travel.
+
+The pods plug into motor **encoder** ports and are read through the name of the motor on that port.
+The drive motors run without encoders, so their encoder ports are free. Both pods go on the Control Hub,
+the same hub as the IMU:
+
+- Control Hub encoder port 2 ("Front Left"): Forward pod
+- Control Hub encoder port 1 ("Back Left"): Strafe pod
+
+The Shooter's encoder port (Control Hub port 0) is kept free for flywheel velocity control.
+No change to the robot configuration file is needed for the pods.

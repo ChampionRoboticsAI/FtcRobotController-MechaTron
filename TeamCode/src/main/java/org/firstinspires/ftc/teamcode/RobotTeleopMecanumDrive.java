@@ -9,10 +9,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Robot-centric TeleOp for the goBILDA StarterBot with Mecanum wheels.
  * Hardware is described in ROBOT_CONFIGURATION.md:
  *
- *   Control Hub   motor port 1: "Back Left"      motor port 2: "Front Left"
- *   Expansion Hub motor port 1: "Back Right"     motor port 2: "Front Right"
- *   Expansion Hub motor port 0: "Intake"         motor port 3: "Midtake"
- *   Control Hub   motor port 0: "Shooter"
+ *   Control Hub motor port 0: "Back Left"      motor port 1: "Front Left"
+ *   Control Hub motor port 2: "Front Right"    motor port 3: "Back Right"
+ *
+ * "Intake", "Midtake" and "Shooter" are optional. If a name is not in the active
+ * configuration, that mechanism is skipped and shows as "not configured" on telemetry,
+ * so the OpMode also runs on a drivetrain-only robot.
+ *
+ * Telemetry also shows the raw encoder count on each drive motor's encoder port, which is
+ * where the odometry pods plug in. Push the robot by hand to check that the pods count.
  *
  * Driven with gamepad1 (Logitech F310, switch on the back set to "X"):
  *
@@ -72,22 +77,40 @@ public class RobotTeleopMecanumDrive extends LinearOpMode {
         }
 
         // If either roller pushes game pieces out instead of pulling them in, flip its direction.
-        intake = hardwareMap.get(DcMotor.class, "Intake");
-        midtake = hardwareMap.get(DcMotor.class, "Midtake");
-        intake.setDirection(DcMotor.Direction.REVERSE);
-        midtake.setDirection(DcMotor.Direction.FORWARD);
+        // tryGet returns null instead of throwing when the name is not configured.
+        intake = hardwareMap.tryGet(DcMotor.class, "Intake");
+        midtake = hardwareMap.tryGet(DcMotor.class, "Midtake");
+        if (intake != null) {
+            intake.setDirection(DcMotor.Direction.REVERSE);
+        }
+        if (midtake != null) {
+            midtake.setDirection(DcMotor.Direction.FORWARD);
+        }
         for (DcMotor motor : new DcMotor[] {intake, midtake}) {
+            if (motor == null) continue;
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
         // FLOAT lets the flywheel spin down on its own instead of braking hard.
-        shooter = hardwareMap.get(DcMotor.class, "Shooter");
-        shooter.setDirection(DcMotor.Direction.FORWARD);
-        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        shooter = hardwareMap.tryGet(DcMotor.class, "Shooter");
+        if (shooter != null) {
+            shooter.setDirection(DcMotor.Direction.FORWARD);
+            shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
+
+        // Zero the encoder counts so pod readings start at 0. STOP_AND_RESET_ENCODER also
+        // stops the motor, so switch back to RUN_WITHOUT_ENCODER afterward.
+        for (DcMotor motor : new DcMotor[] {frontLeftDrive, backLeftDrive, frontRightDrive, backRightDrive}) {
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
 
         telemetry.addData("Status", "Initialized");
+        telemetry.addData("Intake", intake != null ? "found" : "not configured");
+        telemetry.addData("Midtake", midtake != null ? "found" : "not configured");
+        telemetry.addData("Shooter", shooter != null ? "found" : "not configured");
         telemetry.update();
 
         waitForStart();
@@ -141,20 +164,29 @@ public class RobotTeleopMecanumDrive extends LinearOpMode {
             if (gamepad1.right_bumper) {
                 intakePower = -1.0;
             }
-            intake.setPower(intakePower);
-            midtake.setPower(midtakePower);
+            if (intake != null) intake.setPower(intakePower);
+            if (midtake != null) midtake.setPower(midtakePower);
 
             // Holding B runs the Shooter (ignored during motor test, where B is a wheel).
             double shooterPower = (gamepad1.b && !motorTest) ? 1.0 : 0.0;
-            shooter.setPower(shooterPower);
+            if (shooter != null) shooter.setPower(shooterPower);
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Speed", motorTest ? "MOTOR TEST (X=FL A=BL Y=FR B=BR)"
                                                  : speedScale < 1.0 ? "SLOW" : "FULL");
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower * speedScale, frontRightPower * speedScale);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower * speedScale, backRightPower * speedScale);
-            telemetry.addData("Intake/Midtake", "%4.2f, %4.2f", intakePower, midtakePower);
-            telemetry.addData("Shooter", "%4.2f", shooterPower);
+            if (intake != null || midtake != null) {
+                telemetry.addData("Intake/Midtake", "%4.2f, %4.2f", intakePower, midtakePower);
+            }
+            if (shooter != null) {
+                telemetry.addData("Shooter", "%4.2f", shooterPower);
+            }
+            // Raw counts from each drive motor's encoder port (odometry pods plug in here).
+            telemetry.addData("Encoder FL/FR", "%d, %d",
+                    frontLeftDrive.getCurrentPosition(), frontRightDrive.getCurrentPosition());
+            telemetry.addData("Encoder BL/BR", "%d, %d",
+                    backLeftDrive.getCurrentPosition(), backRightDrive.getCurrentPosition());
             telemetry.update();
         }
     }
