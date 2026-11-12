@@ -54,8 +54,9 @@ public class BioBuzzTeleOp extends LinearOpMode {
 
     // Catapult powers (from Everybot code). Positive power drives the arm DOWN.
     static final double CATAPULT_UP_POWER   = -1.0;
-    // Down is helped by gravity, so full power slams the arm into its stop. Raise if it is too slow.
-    static final double CATAPULT_DOWN_POWER =  0.35;
+    // Down has to pull against the rubber bands, so it needs more power than gravity alone would.
+    // Raise toward 1.0 if the arm still won't come down; lower if it slams into its stop.
+    static final double CATAPULT_DOWN_POWER =  0.7;
     static final double CATAPULT_HOLD_POWER =  0.2;
 
     // How long one RB press drives the catapult UP at full power. Tune so the arm just
