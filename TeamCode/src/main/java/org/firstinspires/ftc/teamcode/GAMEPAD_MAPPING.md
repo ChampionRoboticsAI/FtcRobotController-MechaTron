@@ -1,6 +1,6 @@
 # Gamepad Mapping
 
-Controls for the **Robot: Teleop Mecanum Drive** OpMode (`RobotTeleopMecanumDrive.java`).
+Controls for the **Teleop Mecanum Drive** OpMode, shown with a car emoji in the **Drive** group (`RobotTeleopMecanumDrive.java`).
 Hardware and port details are in [ROBOT_CONFIGURATION.md](ROBOT_CONFIGURATION.md).
 
 All controls are on **gamepad1**, a Logitech F310 with the switch on the back set to **X**.
@@ -72,3 +72,17 @@ it as `not configured`, its controls do nothing, and its telemetry line is hidde
 ## Free Buttons
 
 Not yet mapped on gamepad1: **X**, **Y**, **LT**, **D-pad**, **START**, and the stick buttons.
+
+## Odometry Pod Test
+
+Controls for the separate **goBILDA Odometry Pod Test** OpMode, shown with a wrench emoji in the **Test** group
+(`SensorGoBildaOdometryPodTest.java`). It reads Control Hub encoder ports 0 and 1 and never powers a motor.
+
+| Input | Action |
+|---|---|
+| X | Zero the port 0 pod |
+| B | Zero the port 1 pod |
+| A | Zero both pods |
+
+Roll one pod's wheel by hand: only that pod's counts should change, and one full turn should read
+about 2000 counts (about 100.5 mm).

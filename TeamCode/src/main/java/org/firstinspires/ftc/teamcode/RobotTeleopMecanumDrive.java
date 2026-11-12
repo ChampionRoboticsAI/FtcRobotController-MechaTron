@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * forward, flip that motor's direction below.
  */
 
-@TeleOp(name="Robot: Teleop Mecanum Drive", group="Robot")
+@TeleOp(name="🚗 Teleop Mecanum Drive", group="Drive") // car emoji
 public class RobotTeleopMecanumDrive extends LinearOpMode {
 
     // Fraction of full power used while the slow-mode button is held.

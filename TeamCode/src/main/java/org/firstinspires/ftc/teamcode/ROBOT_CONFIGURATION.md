@@ -25,12 +25,17 @@ All the devices are configured and connected as per the [official documentation]
 
 We are using two [Logitech F310](https://www.amazon.com/dp/B003VAHYQY) wired controller gamepad. These two Gamepads will be connected via USB to the REV Driver Hub.
 
+## 
+We are using two [4-Bar Odometry Pod (32mm Wheel)](https://www.gobilda.com/4-bar-odometry-pod-32mm-wheel/)
+
 ## Controller Hub port mapping
 - Motors
-    - Port 0: Back Left (GoBuilda 5202/3/4 series)
+  -  Port 0: x encoder (4-Bar Odometry Pod) 
+  -  Port 1: x encoder (4-Bar Odometry Pod) 
+    <!-- - Port 0: Back Left (GoBuilda 5202/3/4 series)
     - Port 1: Front Left (GoBuilda 5202/3/4 series)
     - Port 2: Front Right (GoBuilda 5202/3/4 series)
-    - Port 3: Back Right (GoBuilda 5202/3/4 series)
+    - Port 3: Back Right (GoBuilda 5202/3/4 series) -->
 
 <!-- - Motors
   - Port 0: Shooter (GoBuilda 5202/3/4 series)
