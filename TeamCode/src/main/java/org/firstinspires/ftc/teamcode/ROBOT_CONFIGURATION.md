@@ -21,19 +21,32 @@ The robot uses the official REV Robotics devices as described below
 
 All the devices are configured and connected as per the [official documentation](https://docs.revrobotics.com/duo-control/menu/control-hub-gs/connect-to-the-control-hub-robot-control-console)
 
+
 ## Gamepad Controller
 
-We are using two [Logitech F310](https://www.amazon.com/dp/B003VAHYQY) wired controller gamepad. These two Gamepads will be connected via USB to the REV Driver Hub.
+We are using two [PlayStation DualSense](https://www.playstation.com/en-us/accessories/dualsense-wireless-controller/) gamepad in wired mode. These two Gamepads will be connected via USB to the REV Driver Hub.
+
+## PedroPathing
+
+Pedro Pathing [documentation](https://pedropathing.com/docs/pathing)
+Pedro Pathing [GitHub](https://github.com/Pedro-Pathing/PedroPathing)
+
+[goBuilda 4-Bar Odometry Pod](https://www.gobilda.com/4-bar-odometry-pod-32mm-wheel/)
+
 
 ## Controller Hub port mapping
 
 - Motors
-  - Port 0: Shooter (GoBuilda 5202/3/4 series)
-  - Port 1: Back Left (GoBuilda 5202/3/4 series)
-  - Port 2: Front Left (GoBuilda 5202/3/4 series)
+  - Port 0: Front Left (GoBuilda 5202/3/4 series)
+  - Port 1: Front Right (GoBuilda 5202/3/4 series)
+  - Port 2: Back Left (GoBuilda 5202/3/4 series)
+  - Port 3: Back Right (GoBuilda 5202/3/4 series)
+  - Port 0 Encoder: x encoder (4-Bar Odometry Pod) 
+  - Port 3 Encoder: y encoder (4-Bar Odometry Pod) 
 
 - Servos
-  - port 0: Left Flower (Servo)
+  - Port 0: Left Flower Arm (REV Smart Robot Servos V2)
+  - Port 1: Right Flower Arm (REV Smart Robot Servos V2)
 
 - I2C Bus 0
   - Port 0: imu (REV internal IMU (BHI260AP))
@@ -43,11 +56,7 @@ We are using two [Logitech F310](https://www.amazon.com/dp/B003VAHYQY) wired con
 ## Expansion Hub port mapping
 
 - Motors 
-  - Port 0: Intake (GoBuilda 5202/3/4 series)
-  - Port 1: Back Right (GoBuilda 5202/3/4 series)
-  - Port 2: Front Right (GoBuilda 5202/3/4 series)
-  - Port 3: Midtake (GoBuilda 5202/3/4 series)
-
-- Servos
-  - Port 0: Right Flower (Servo)
+  - Port 1: Catapult Right (GoBuilda 5202/3/4 series)
+  - Port 2: Catapult Left (GoBuilda 5202/3/4 series)
+  - Port 3: Intake (GoBuilda 5202/3/4 series)
 
