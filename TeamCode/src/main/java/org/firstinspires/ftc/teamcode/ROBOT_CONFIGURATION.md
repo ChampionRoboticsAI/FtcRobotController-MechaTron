@@ -30,6 +30,8 @@ We are using two [PlayStation DualSense](https://www.playstation.com/en-us/acces
 
 Pedro Pathing [documentation](https://pedropathing.com/docs/pathing)
 Pedro Pathing [GitHub](https://github.com/Pedro-Pathing/PedroPathing)
+Pedro Pathing [QuickStart](https://github.com/Pedro-Pathing/Quickstart)
+Pedro Pathing [Tuning](https://pedropathing.com/docs/pathing/tuning)
 
 [goBuilda 4-Bar Odometry Pod](https://www.gobilda.com/4-bar-odometry-pod-32mm-wheel/)
 
@@ -41,8 +43,8 @@ Pedro Pathing [GitHub](https://github.com/Pedro-Pathing/PedroPathing)
   - Port 1: Front Right (GoBuilda 5202/3/4 series)
   - Port 2: Back Left (GoBuilda 5202/3/4 series)
   - Port 3: Back Right (GoBuilda 5202/3/4 series)
-  - Port 0 Encoder: x encoder (4-Bar Odometry Pod) 
-  - Port 3 Encoder: y encoder (4-Bar Odometry Pod) 
+  - Port 0 Encoder: x encoder - forward pod, wheel parallel to the drive direction (4-Bar Odometry Pod). Pedro `xPodName = "Back Right"`
+  - Port 3 Encoder: y encoder - strafe pod, wheel perpendicular to the drive direction (4-Bar Odometry Pod). Pedro `yPodName = "Front Left"`
 
 - Servos
   - Port 0: Left Flower Arm (REV Smart Robot Servos V2)

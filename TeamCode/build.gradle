@@ -24,6 +24,15 @@ android {
     }
 }
 
+repositories {
+    // Pedro Pathing artifacts
+    maven { url 'https://repo.dairy.foundation/releases/' }
+}
+
 dependencies {
     implementation project(':FtcRobotController')
+
+    // Pedro Pathing 3 (versions match Pedro-Pathing/Quickstart)
+    implementation 'com.pedropathing:revhub:3.0.2'
+    implementation 'com.pedropathing:tuning:1.0.3'
 }
