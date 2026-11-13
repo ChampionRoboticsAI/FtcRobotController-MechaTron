@@ -86,6 +86,8 @@ class SpinMotor extends TuningOpMode<Void> {
     @Override
     protected Void runTuningOpMode() {
         DcMotor motor = hardwareMap.dcMotor.get(name);
+        // Drive motor encoder ports are used by the odometry pods, so never run with encoder feedback.
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
         motor.setPower(0.5);
         while (opModeIsActive()) {

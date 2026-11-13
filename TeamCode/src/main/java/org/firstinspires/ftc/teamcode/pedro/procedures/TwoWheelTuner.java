@@ -21,8 +21,8 @@ public class TwoWheelTuner extends Procedure {
     @Override
     public void run() throws InterruptedException {
         Inputs setup = inputs("Setup", "Set encoder, IMU, and Control Hub orientation");
-        Inputs.Field<String> forwardPodName = setup.s("Forward Encoder Motor Name").withDefault("Front Left");
-        Inputs.Field<String> strafePodName = setup.s("Strafe Encoder Motor Name").withDefault("Back Right");
+        Inputs.Field<String> forwardPodName = setup.s("Forward Encoder Motor Name").withDefault("Back Right");
+        Inputs.Field<String> strafePodName = setup.s("Strafe Encoder Motor Name").withDefault("Front Left");
         Inputs.Field<String> imuName = setup.s("IMU HardwareMap Name").withDefault("imu");
         Inputs.Field<RevHubOrientationOnRobot.LogoFacingDirection> logoDirection =
                 setup.e("Logo Facing Direction", RevHubOrientationOnRobot.LogoFacingDirection.class)
