@@ -15,7 +15,7 @@ All controls are on **gamepad1**, a PlayStation DualSense (wired). Gamepad2 is n
 | L3 (click left stick) | `left_stick_button` | Toggle slow mode |
 | L2 (hold) | `left_trigger` | Intake **in** |
 | L1 (hold) | `left_bumper` | Intake **out** |
-| R1 (press once) | `right_bumper` | Catapult **launch** |
+| R1 (hold) | `right_bumper` | Catapult **launch** |
 | R2 (hold) | `right_trigger` | Catapult **down** |
 | Cross | `a` | Flower arms **out** |
 | Circle | `b` | Flower arms **in** |
@@ -48,15 +48,15 @@ All controls are on **gamepad1**, a PlayStation DualSense (wired). Gamepad2 is n
 
 | Input | Action |
 |---|---|
-| R1 (press once) | **LAUNCH**: full power up for 0.3 s, even if R1 is released early |
-| R2 (hold) | **DOWN** at 35% power, for a gentle return |
-| Neither | **HOLD**: 20% power keeps the arm down while driving |
+| R1 (hold) | **LAUNCH**: full power up while held |
+| R2 (hold) | **DOWN** at full power |
+| Neither | **HOLD**: 20% power keeps the arm down against the rubber band |
 
 - **Start of TeleOp:** the catapult is **IDLE** (no power, braked) so it stays in its initial position.
   Holding power only begins after R1 or R2 is pressed for the first time.
-- **One press = one shot.** Holding R1 does not extend the launch; release and press again for the next shot.
-- **R2 always wins:** pressing R2 during a launch cancels it immediately (use it as an emergency stop).
-- After a launch finishes, the hold power brings the arm back down.
+- **Hold R1 until the arm reaches the top.** Releasing early switches to hold power, which pulls the arm back down mid-swing.
+- **R2 wins** if both R1 and R2 are pressed.
+- The rubber band holds the arm up after a launch. Use R2 to bring it down; the hold power then keeps it down.
 
 ## Flower Arms
 
@@ -101,9 +101,8 @@ These constants are at the top of `BioBuzzTeleOp.java`:
 | `SLOW_MODE_SCALE` | 0.4 | Drive power in slow mode |
 | `INTAKE_IN_POWER` / `INTAKE_OUT_POWER` | 1.0 / -0.9 | Intake speeds |
 | `CATAPULT_UP_POWER` | -1.0 | Launch power (already maximum) |
-| `LAUNCH_TIME_SECONDS` | 0.3 | How long one R1 press drives the launch |
-| `CATAPULT_DOWN_POWER` | 0.35 | R2 return speed (lower = gentler) |
-| `CATAPULT_HOLD_POWER` | 0.2 | Power that keeps the arm down |
+| `CATAPULT_DOWN_POWER` | 1.0 | R2 return power |
+| `CATAPULT_HOLD_POWER` | 0.2 | Power that keeps the arm down against the rubber band |
 | `FLOWER_ARM_IN_POSITION` / `FLOWER_ARM_OUT_POSITION` | 0.0 / 0.5 | Flower arm servo positions |
 
 ## Free Buttons

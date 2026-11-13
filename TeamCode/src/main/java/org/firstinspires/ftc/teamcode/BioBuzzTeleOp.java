@@ -26,9 +26,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *  L3 (click)            toggle slow mode
  *  LT (hold)             intake in
  *  LB (hold)             intake out (wins over LT)
- *  RB (press once)       catapult LAUNCH: full power UP for LAUNCH_TIME_SECONDS
- *  RT (hold)             catapult DOWN (wins over RB and cancels a launch)
- *  neither RB nor RT     catapult HOLD: small power keeps the arm down while driving
+ *  RB (hold)             catapult UP (launch)
+ *  RT (hold)             catapult DOWN (wins over RB, as in the Everybot code)
+ *  neither RB nor RT     catapult HOLD: small power keeps the arm down against the rubber band
  *                        (IDLE, no power, at start until RB or RT is first pressed)
  *  A / Cross             flower arms OUT
  *  B / Circle            flower arms IN
@@ -54,13 +54,10 @@ public class BioBuzzTeleOp extends LinearOpMode {
 
     // Catapult powers (from Everybot code). Positive power drives the arm DOWN.
     static final double CATAPULT_UP_POWER   = -1.0;
-    // Down is helped by gravity, so full power slams the arm into its stop. Raise if it is too slow.
-    static final double CATAPULT_DOWN_POWER =  0.35;
+    static final double CATAPULT_DOWN_POWER =  1.0;
+    // Pulls against the rubber band to keep the arm down after a launch. Raise if the band
+    // lifts the arm back up; lower if the motors buzz or get hot while holding.
     static final double CATAPULT_HOLD_POWER =  0.2;
-
-    // How long one RB press drives the catapult UP at full power. Tune so the arm just
-    // reaches the top: too short loses distance, too long stalls the motors against the stop.
-    static final double LAUNCH_TIME_SECONDS = 0.3;
 
     // Flower arm servo positions (0.0..1.0). These are starting guesses: tune on the robot.
     // The right servo is reversed, so the same value moves both arms as mirror images.
@@ -132,9 +129,6 @@ public class BioBuzzTeleOp extends LinearOpMode {
         boolean lastSlowButton = false;
         boolean flowerArmsOut = false;  // Arms move to IN as soon as the OpMode starts.
         boolean catapultUsed = false;   // No hold power until the driver first moves the catapult.
-        boolean launching = false;
-        boolean lastLaunchButton = false;
-        ElapsedTime launchTimer = new ElapsedTime();
 
         while (opModeIsActive()) {
             boolean motorTest = gamepad1.back;
@@ -194,25 +188,13 @@ public class BioBuzzTeleOp extends LinearOpMode {
             intake.setPower(intakePower);
 
             // ---------------- CATAPULT ----------------
-            // One press of RB starts a full-power launch that runs for LAUNCH_TIME_SECONDS,
-            // even if RB is released early. RT (down) always wins and cancels a launch.
-            boolean launchButton = gamepad1.right_bumper;
-            if (launchButton && !lastLaunchButton) {
-                launching = true;
-                launchTimer.reset();
-            }
-            lastLaunchButton = launchButton;
-            if (launching && launchTimer.seconds() >= LAUNCH_TIME_SECONDS) {
-                launching = false;
-            }
-
+            // RT (down) wins if both are pressed, as in the Everybot code.
             CatapultMode catapultMode;
             double catapultPower;
             if (gamepad1.right_trigger > TRIGGER_THRESHOLD) {
-                launching = false;
                 catapultMode = CatapultMode.DOWN;
                 catapultPower = CATAPULT_DOWN_POWER;
-            } else if (launching) {
+            } else if (gamepad1.right_bumper) {
                 catapultMode = CatapultMode.UP;
                 catapultPower = CATAPULT_UP_POWER;
             } else if (catapultUsed) {
