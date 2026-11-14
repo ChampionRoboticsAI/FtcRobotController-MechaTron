@@ -47,8 +47,8 @@ Pedro Pathing [Tuning](https://pedropathing.com/docs/pathing/tuning)
   - Port 3 Encoder: y encoder - strafe pod, wheel perpendicular to the drive direction (4-Bar Odometry Pod). Pedro `yPodName = "Front Left"`
 
 - Servos
-  - Port 0: Left Flower Arm (REV Smart Robot Servos V2)
-  - Port 1: Right Flower Arm (REV Smart Robot Servos V2)
+  - Port 0: Left Flower Arm (REV Smart Robot Servos V2)[https://www.revrobotics.com/Smart-servo-v2]
+  - Port 1: Right Flower Arm (REV Smart Robot Servos V2)[https://www.revrobotics.com/Smart-servo-v2]
 
 - I2C Bus 0
   - Port 0: imu (REV internal IMU (BHI260AP))

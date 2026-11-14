@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -30,8 +29,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *  RT (hold)             catapult DOWN (wins over RB, as in the Everybot code)
  *  neither RB nor RT     catapult HOLD: small power keeps the arm down against the rubber band
  *                        (IDLE, no power, at start until RB or RT is first pressed)
- *  A / Cross             flower arms OUT
- *  B / Circle            flower arms IN
+ *  A / Cross (press)     flower arms one stage OUT: UP -> BLOCK (45 deg) -> FLAT (90 deg)
+ *  B / Circle (press)    flower arms one stage IN:  FLAT -> BLOCK -> UP
+ *                        (arms go to UP when TeleOp starts; positions are in FlowerArms.java)
  *  BACK + X/A/Y/B        motor test: FL / BL / FR / BR wheel
  *
  * FIRST TEST: lift the robot. The two catapult motors are geared together, so if one
@@ -59,11 +59,6 @@ public class BioBuzzTeleOp extends LinearOpMode {
     // lifts the arm back up; lower if the motors buzz or get hot while holding.
     static final double CATAPULT_HOLD_POWER =  0.2;
 
-    // Flower arm servo positions (0.0..1.0). These are starting guesses: tune on the robot.
-    // The right servo is reversed, so the same value moves both arms as mirror images.
-    static final double FLOWER_ARM_IN_POSITION  = 0.0;
-    static final double FLOWER_ARM_OUT_POSITION = 0.5;
-
     private enum CatapultMode { IDLE, UP, DOWN, HOLD }
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -74,8 +69,7 @@ public class BioBuzzTeleOp extends LinearOpMode {
     private DcMotor intake = null;
     private DcMotor catapultLeft = null;
     private DcMotor catapultRight = null;
-    private Servo leftFlowerArm = null;
-    private Servo rightFlowerArm = null;
+    private FlowerArms flowerArms = null;
 
     @Override
     public void runOpMode() {
@@ -114,10 +108,8 @@ public class BioBuzzTeleOp extends LinearOpMode {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
-        leftFlowerArm = hardwareMap.get(Servo.class, "Left Flower Arm");
-        rightFlowerArm = hardwareMap.get(Servo.class, "Right Flower Arm");
-        leftFlowerArm.setDirection(Servo.Direction.FORWARD);
-        rightFlowerArm.setDirection(Servo.Direction.REVERSE);
+        // Servo positions, directions and stage angles live in FlowerArms.java.
+        flowerArms = new FlowerArms(hardwareMap);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -125,9 +117,13 @@ public class BioBuzzTeleOp extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        // Arms point straight up as soon as TeleOp starts.
+        flowerArms.setStage(FlowerArms.Stage.UP);
+
         boolean slowMode = false;
         boolean lastSlowButton = false;
-        boolean flowerArmsOut = false;  // Arms move to IN as soon as the OpMode starts.
+        boolean lastFlowerOutButton = false;
+        boolean lastFlowerInButton = false;
         boolean catapultUsed = false;   // No hold power until the driver first moves the catapult.
 
         while (opModeIsActive()) {
@@ -213,17 +209,19 @@ public class BioBuzzTeleOp extends LinearOpMode {
             catapultRight.setPower(catapultPower);
 
             // ---------------- FLOWER ARMS ----------------
-            // A = out, B = in; ignored during motor test, where A/B run wheels.
+            // Each press of A moves one stage out, each press of B one stage in (UP <-> BLOCK <-> FLAT).
+            // Ignored during motor test, where A/B run wheels.
+            boolean flowerOutButton = gamepad1.a;
+            boolean flowerInButton = gamepad1.b;
             if (!motorTest) {
-                if (gamepad1.a) {
-                    flowerArmsOut = true;
-                } else if (gamepad1.b) {
-                    flowerArmsOut = false;
+                if (flowerOutButton && !lastFlowerOutButton) {
+                    flowerArms.stepOut();
+                } else if (flowerInButton && !lastFlowerInButton) {
+                    flowerArms.stepIn();
                 }
             }
-            double flowerArmPosition = flowerArmsOut ? FLOWER_ARM_OUT_POSITION : FLOWER_ARM_IN_POSITION;
-            leftFlowerArm.setPosition(flowerArmPosition);
-            rightFlowerArm.setPosition(flowerArmPosition);
+            lastFlowerOutButton = flowerOutButton;
+            lastFlowerInButton = flowerInButton;
 
             // ---------------- TELEMETRY ----------------
             telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -233,7 +231,9 @@ public class BioBuzzTeleOp extends LinearOpMode {
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower * speedScale, backRightPower * speedScale);
             telemetry.addData("Intake", "%4.2f", intakePower);
             telemetry.addData("Catapult", "%s (%4.2f)", catapultMode, catapultPower);
-            telemetry.addData("Flower Arms", "%s (%4.2f)", flowerArmsOut ? "OUT" : "IN", flowerArmPosition);
+            telemetry.addData("Flower Arms", "%s (%d deg) L=%4.3f R=%4.3f",
+                    flowerArms.getStage(), (int) flowerArms.getStage().degreesOut,
+                    flowerArms.getLeftPosition(), flowerArms.getRightPosition());
             telemetry.update();
         }
     }

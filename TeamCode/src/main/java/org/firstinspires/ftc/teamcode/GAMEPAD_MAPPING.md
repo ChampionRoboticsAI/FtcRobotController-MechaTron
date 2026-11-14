@@ -17,8 +17,8 @@ All controls are on **gamepad1**, a PlayStation DualSense (wired). Gamepad2 is n
 | L1 (hold) | `left_bumper` | Intake **out** |
 | R1 (hold) | `right_bumper` | Catapult **launch** |
 | R2 (hold) | `right_trigger` | Catapult **down** |
-| Cross | `a` | Flower arms **out** |
-| Circle | `b` | Flower arms **in** |
+| Cross (press) | `a` | Flower arms one stage **out** (UP → BLOCK → FLAT) |
+| Circle (press) | `b` | Flower arms one stage **in** (FLAT → BLOCK → UP) |
 | Create (hold) + Square / Cross / Triangle / Circle | `back` + `x/a/y/b` | Motor test |
 
 ## Driving
@@ -60,13 +60,22 @@ All controls are on **gamepad1**, a PlayStation DualSense (wired). Gamepad2 is n
 
 ## Flower Arms
 
+The arms have three stages, measured outward from vertical:
+
+| Stage | Angle | Use |
+|---|---|---|
+| **UP** | 0° | Arm points straight up. Position when TeleOp starts. |
+| **BLOCK** | 45° | Blocks Nectar balls from the intake; Pollen passes through. |
+| **FLAT** | 90° | Arm lies flat on the field, for pulling Pollen out of the Flower section. |
+
 | Input | Action |
 |---|---|
-| Cross (press) | Flower arms **OUT** |
-| Circle (press) | Flower arms **IN** |
+| Cross (press) | One stage **out**: UP → BLOCK → FLAT |
+| Circle (press) | One stage **in**: FLAT → BLOCK → UP |
 
-- One press is enough; the arms stay in position until the other button is pressed.
-- Both arms move to **IN** when TeleOp starts.
+- Each press moves one stage; holding the button does not keep moving. Cross at FLAT or Circle at UP does nothing.
+- Both arms move to **UP** when TeleOp starts.
+- Servo positions are set in `FlowerArms.java`. Use the **BioBuzz: Flower Arm Calibration** OpMode to find each arm's UP position.
 
 ## Motor Test Mode
 
@@ -90,7 +99,7 @@ Hold **Create** and lift the robot so the wheels are off the ground.
 - **Front/Back left/Right**: power sent to each wheel
 - **Intake**: intake power (negative = out)
 - **Catapult**: `IDLE`, `UP` (launching), `DOWN`, or `HOLD`, with power
-- **Flower Arms**: `IN` or `OUT`, with servo position
+- **Flower Arms**: `UP`, `BLOCK` or `FLAT`, with angle and both servo positions
 
 ## Tuning Values
 
@@ -103,7 +112,13 @@ These constants are at the top of `BioBuzzTeleOp.java`:
 | `CATAPULT_UP_POWER` | -1.0 | Launch power (already maximum) |
 | `CATAPULT_DOWN_POWER` | 1.0 | R2 return power |
 | `CATAPULT_HOLD_POWER` | 0.2 | Power that keeps the arm down against the rubber band |
-| `FLOWER_ARM_IN_POSITION` / `FLOWER_ARM_OUT_POSITION` | 0.0 / 0.5 | Flower arm servo positions |
+
+Flower arm positions are in `FlowerArms.java`:
+
+| Constant | Value | What it does |
+|---|---|---|
+| `LEFT_UP_POSITION` / `RIGHT_UP_POSITION` | 0.20 / 0.20 (calibrate) | Servo position where each arm points straight up |
+| `Stage` angles | 0° / 45° / 90° | UP / BLOCK / FLAT, measured out from vertical |
 
 ## Free Buttons
 
