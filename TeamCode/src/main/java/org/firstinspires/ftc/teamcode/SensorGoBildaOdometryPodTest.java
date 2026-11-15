@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
 /*
- * Bench test for the two goBILDA 4-Bar Odometry Pods on the Control Hub encoder ports 0 and 1.
+ * Bench test for the three goBILDA 4-Bar Odometry Pods on the Control Hub encoder ports 0, 3 and 2.
  * Hardware is described in ROBOT_CONFIGURATION.md.
  *
  * Encoders are read directly from the hub by port number, so this OpMode does not depend on
@@ -15,7 +15,8 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
  * To test: roll one pod's wheel by hand and check that only that pod's counts change.
  * One full turn of the wheel should read about 2000 counts (about 100.5 mm).
  *
- * Gamepad1:  X = zero the port 0 pod    B = zero the port 1 pod    A = zero both pods
+ * Gamepad1:  X = zero pod A (port 0)   B = zero pod B (port 3)   Y = zero pod C (port 2)
+ *            A = zero all pods
  */
 
 @TeleOp(name="🔧 goBILDA Odometry Pod Test", group="Test") // wrench emoji
@@ -26,6 +27,7 @@ public class SensorGoBildaOdometryPodTest extends LinearOpMode {
 
     static final int POD_A_PORT = 0;
     static final int POD_B_PORT = 3;
+    static final int POD_C_PORT = 2;
 
     // goBILDA 4-Bar Odometry Pod: 2000 counts per revolution of a 32 mm wheel.
     static final double COUNTS_PER_REV = 2000.0;
@@ -52,17 +54,21 @@ public class SensorGoBildaOdometryPodTest extends LinearOpMode {
         // Counts at the last zero. Zeroing here leaves the hub's own encoder count untouched.
         int podAZero = hub.getMotorCurrentPosition(POD_A_PORT);
         int podBZero = hub.getMotorCurrentPosition(POD_B_PORT);
+        int podCZero = hub.getMotorCurrentPosition(POD_C_PORT);
 
         while (opModeIsActive()) {
             int podARaw = hub.getMotorCurrentPosition(POD_A_PORT);
             int podBRaw = hub.getMotorCurrentPosition(POD_B_PORT);
+            int podCRaw = hub.getMotorCurrentPosition(POD_C_PORT);
 
             if (gamepad1.x || gamepad1.a) podAZero = podARaw;
             if (gamepad1.b || gamepad1.a) podBZero = podBRaw;
+            if (gamepad1.y || gamepad1.a) podCZero = podCRaw;
 
-            addPodTelemetry("Port " + POD_A_PORT, podARaw, podARaw - podAZero);
-            addPodTelemetry("Port " + POD_B_PORT, podBRaw, podBRaw - podBZero);
-            telemetry.addLine("X = zero port 0 | B = zero port 1 | A = zero both");
+            addPodTelemetry("Pod A (port " + POD_A_PORT + ")", podARaw, podARaw - podAZero);
+            addPodTelemetry("Pod B (port " + POD_B_PORT + ")", podBRaw, podBRaw - podBZero);
+            addPodTelemetry("Pod C (port " + POD_C_PORT + ")", podCRaw, podCRaw - podCZero);
+            telemetry.addLine("X = zero A | B = zero B | Y = zero C | A = zero all");
             telemetry.update();
         }
     }
