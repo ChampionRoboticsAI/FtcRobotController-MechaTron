@@ -1,18 +1,17 @@
 package org.firstinspires.ftc.teamcode.pedro;
 
 import com.pedropathing.algorithm.Foresight;
-import com.pedropathing.revhub.localizers.TwoWheelLocalizer;
 import com.pedropathing.tuning.autotune.Procedure;
 import com.pedropathing.tuning.autotune.Tuner;
 
 import org.firstinspires.ftc.teamcode.pedro.procedures.ForesightTuner;
 import org.firstinspires.ftc.teamcode.pedro.procedures.MecanumTuner;
 import org.firstinspires.ftc.teamcode.pedro.procedures.Tests;
-import org.firstinspires.ftc.teamcode.pedro.procedures.TwoWheelTuner;
+import org.firstinspires.ftc.teamcode.pedro.procedures.ThreeWheelTuner;
 
 /**
  * Procedures shown in AutoTune (http://192.168.43.1:10158). Run them in this order:
- * Mecanum Tuner -> Two Wheel Tuner -> Tests (Localization/Odometry) -> Foresight Tuner -> Tests (Line/Curve/Hold).
+ * Mecanum Tuner -> Three Wheel Tuner -> Tests (Localization/Odometry) -> Foresight Tuner -> Tests (Line/Curve/Hold).
  */
 public class Tuning {
 
@@ -22,22 +21,20 @@ public class Tuning {
     }
 
     @Tuner
-    public static Procedure twoWheelTuner() {
-        return new TwoWheelTuner();
+    public static Procedure threeWheelTuner() {
+        return new ThreeWheelTuner();
     }
 
     @Tuner
     public static Procedure foresightTuner() {
-        return new ForesightTuner(
-                hardwareMap -> new TwoWheelLocalizer(hardwareMap, Constants.localizerConfig),
-                Constants::drivetrain);
+        return new ForesightTuner(Constants::localizer, Constants::drivetrain);
     }
 
     @Tuner
     public static Procedure tests() {
         return new Tests(
                 Constants::drivetrain,
-                hardwareMap -> new TwoWheelLocalizer(hardwareMap, Constants.localizerConfig),
+                Constants::localizer,
                 () -> new Foresight(Constants.foresightConfig));
     }
 }

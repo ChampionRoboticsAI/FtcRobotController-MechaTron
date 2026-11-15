@@ -43,8 +43,9 @@ Pedro Pathing [Tuning](https://pedropathing.com/docs/pathing/tuning)
   - Port 1: Front Right (GoBuilda 5202/3/4 series)
   - Port 2: Back Left (GoBuilda 5202/3/4 series)
   - Port 3: Back Right (GoBuilda 5202/3/4 series)
-  - Port 0 Encoder: x encoder - forward pod, wheel parallel to the drive direction (4-Bar Odometry Pod). Pedro `xPodName = "Back Right"`
-  - Port 3 Encoder: y encoder - strafe pod, wheel perpendicular to the drive direction (4-Bar Odometry Pod). Pedro `yPodName = "Front Left"`
+  - Port 0 Encoder: x1 encoder - left forward pod, wheel parallel to the drive direction (4-Bar Odometry Pod). Pedro `leftEncoderName = "Front Left"`
+  - Port 3 Encoder: x2 encoder - right forward pod, wheel parallel to the drive direction (4-Bar Odometry Pod). Pedro `rightEncoderName = "Back Right"`
+  - Port 2 Encoder: y encoder - strafe pod, wheel perpendicular to the drive direction (4-Bar Odometry Pod). Pedro `strafeEncoderName = "Back Left"`
 
 - Servos
   - Port 0: Left Flower Arm (REV Smart Robot Servos V2)[https://www.revrobotics.com/Smart-servo-v2]
