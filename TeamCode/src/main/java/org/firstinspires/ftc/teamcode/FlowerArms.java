@@ -85,8 +85,26 @@ public class FlowerArms {
 
     /** Raw servo positions, for calibration. */
     public void setPositions(double leftPosition, double rightPosition) {
-        left.setPosition(Range.clip(leftPosition, 0.0, 1.0));
-        right.setPosition(Range.clip(rightPosition, 0.0, 1.0));
+        setLeftPosition(leftPosition);
+        setRightPosition(rightPosition);
+    }
+
+    /** Raw left servo position, for calibration. Powers the servo if it was relaxed. */
+    public void setLeftPosition(double position) {
+        left.setPwmEnable();
+        left.setPosition(Range.clip(position, 0.0, 1.0));
+    }
+
+    /** Raw right servo position, for calibration. Powers the servo if it was relaxed. */
+    public void setRightPosition(double position) {
+        right.setPwmEnable();
+        right.setPosition(Range.clip(position, 0.0, 1.0));
+    }
+
+    /** Cuts the servo signal so both arms go limp (stops a stalled servo from humming). */
+    public void relax() {
+        left.setPwmDisable();
+        right.setPwmDisable();
     }
 
     public double getLeftPosition() {
