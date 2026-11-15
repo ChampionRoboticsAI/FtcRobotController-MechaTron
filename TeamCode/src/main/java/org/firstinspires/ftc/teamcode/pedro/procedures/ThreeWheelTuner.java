@@ -206,10 +206,21 @@ class ThreeWheelResolution extends TuningOpMode<List<Double>> {
         localizer.setPose(new Pose(0, 0));
         Pose position = null;
 
+        // MechaTron: show raw encoder ticks so a dead/miswired pod is visible (upstream tells you to
+        // "check the displayed ticks" but never displays them).
+        DcMotorEx leftMotor = hardwareMap.get(DcMotorEx.class, config.leftEncoderName.get());
+        DcMotorEx rightMotor = hardwareMap.get(DcMotorEx.class, config.rightEncoderName.get());
+        DcMotorEx strafeMotor = hardwareMap.get(DcMotorEx.class, config.strafeEncoderName.get());
+
         waitForStart();
         while (!isStopRequested()) {
             localizer.update();
             position = localizer.pose();
+            telemetry.addData("left ticks (" + config.leftEncoderName.get() + ")", leftMotor.getCurrentPosition());
+            telemetry.addData("right ticks (" + config.rightEncoderName.get() + ")", rightMotor.getCurrentPosition());
+            telemetry.addData("strafe ticks (" + config.strafeEncoderName.get() + ")", strafeMotor.getCurrentPosition());
+            telemetry.addData("pose", position);
+            telemetry.update();
         }
 
         if (position == null) {
