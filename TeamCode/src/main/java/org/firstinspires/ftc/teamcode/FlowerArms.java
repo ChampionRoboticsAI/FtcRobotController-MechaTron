@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
  *
  * The arms have three stages, measured outward from straight up:
  *   UP    -   0 deg  arm vertical (TeleOp start position)
- *   BLOCK -  45 deg  blocks Nectar balls from the intake, lets Pollen through
+ *   BLOCK -  60 deg  blocks Nectar balls from the intake, lets Pollen through
  *   FLAT  -  90 deg  arm flat on the field, for pulling Pollen out of the Flower section
  *
  * Only the UP positions need calibrating (use the "BioBuzz: Flower Arm Calibration" OpMode).
@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.util.Range;
 public class FlowerArms {
 
     public enum Stage {
-        UP(0.0), BLOCK(45.0), FLAT(90.0);
+        UP(0.0), BLOCK(60.0), FLAT(90.0);
 
         public final double degreesOut;
 
@@ -32,8 +32,8 @@ public class FlowerArms {
     // Servo position (0..1) at which each arm points straight up.
     // TODO: starting guesses - replace with the values from "BioBuzz: Flower Arm Calibration".
     // Each arm needs its own value because the servo horns rarely sit on the same spline tooth.
-    public static final double LEFT_UP_POSITION  = 0.20;
-    public static final double RIGHT_UP_POSITION = 0.20;
+    public static final double LEFT_UP_POSITION  = 0.330;
+    public static final double RIGHT_UP_POSITION = 0.330;
 
     // With these directions, increasing position must move BOTH arms outward (away from the robot).
     // If one arm folds into the robot when stepping out, flip its direction here.

@@ -6,7 +6,7 @@ Primary documentation for FTC is available at https://ftc-docs.firstinspires.org
 
 ## StarterBot details
 
-The robot base structure is build using [goBuilda StarterBot](https://www.gobilda.com/ftc-starter-bot-resource-guide-2026-2027-season/).
+The robot base structure is build using [FTC EveryBot](https://www.chiefdelphi.com/t/the-2026-2027-robonauts-ftc-everybot-low-resource-build/524058).
 The robot has been further modified to use the Mecanum wheel described in [this instructions](https://www.gobilda.com/ftc-starterbot-with-mecanum-wheels-resource-guide-2026-2027/).
 
 Mecannum Drive example code is available at https://ftc-tech-toolbox.vercel.app/docs/Commonly%20Programmed%20Modules/Mec
@@ -18,6 +18,7 @@ The robot uses the official REV Robotics devices as described below
 - REV Robotics [Driver Hub](https://docs.revrobotics.com/duo-control/control-system-overview/driver-hub-specifications)
 - A REV Robotics [Control Hub](https://docs.revrobotics.com/duo-control/control-system-overview/control-hub-basics)
 - A REV Robotics [Expansion Hub](https://docs.revrobotics.com/duo-control/control-system-overview/expansion-hub-basics)
+- REV Servo Programmer [Operating Mode](https://docs.revrobotics.com/rev-crossover-products/servo/srs-programmer/switching-operating-modes)
 
 All the devices are configured and connected as per the [official documentation](https://docs.revrobotics.com/duo-control/menu/control-hub-gs/connect-to-the-control-hub-robot-control-console)
 
