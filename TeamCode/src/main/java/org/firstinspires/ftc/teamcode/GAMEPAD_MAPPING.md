@@ -17,7 +17,7 @@ All controls are on **gamepad1**, a PlayStation DualSense (wired). Gamepad2 is n
 | L1 (hold) | `left_bumper` | Intake **out** |
 | R1 (hold) | `right_bumper` | Catapult **launch** |
 | R2 (hold) | `right_trigger` | Catapult **down** |
-| Cross (press) | `a` | Flower arms one stage **out** (UP → BLOCK → FLAT) |
+| Cross (press) | `a` | Flower arms one stage **out** (UP → BLOCK (60°) → FLAT) |
 | Circle (press) | `b` | Flower arms one stage **in** (FLAT → BLOCK → UP) |
 | Create (hold) + Square / Cross / Triangle / Circle | `back` + `x/a/y/b` | Motor test |
 
@@ -65,12 +65,12 @@ The arms have three stages, measured outward from vertical:
 | Stage | Angle | Use |
 |---|---|---|
 | **UP** | 0° | Arm points straight up. Position when TeleOp starts. |
-| **BLOCK** | 45° | Blocks Nectar balls from the intake; Pollen passes through. |
+| **BLOCK** | 60° | Blocks Nectar balls from the intake; Pollen passes through. |
 | **FLAT** | 90° | Arm lies flat on the field, for pulling Pollen out of the Flower section. |
 
 | Input | Action |
 |---|---|
-| Cross (press) | One stage **out**: UP → BLOCK → FLAT |
+| Cross (press) | One stage **out**: UP → BLOCK (60°) → FLAT |
 | Circle (press) | One stage **in**: FLAT → BLOCK → UP |
 
 - Each press moves one stage; holding the button does not keep moving. Cross at FLAT or Circle at UP does nothing.
@@ -118,7 +118,7 @@ Flower arm positions are in `FlowerArms.java`:
 | Constant | Value | What it does |
 |---|---|---|
 | `LEFT_UP_POSITION` / `RIGHT_UP_POSITION` | 0.20 / 0.20 (calibrate) | Servo position where each arm points straight up |
-| `Stage` angles | 0° / 45° / 90° | UP / BLOCK / FLAT, measured out from vertical |
+| `Stage` angles | 0° / 60° / 90° | UP / BLOCK / FLAT, measured out from vertical |
 
 ## Free Buttons
 

@@ -25,7 +25,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * 3. Copy the "Left position" and "Right position" numbers into LEFT_UP_POSITION / RIGHT_UP_POSITION.
  * 4. Check the direction: "+" (D-pad up / Triangle) must move that arm OUTWARD, away from the robot.
  *    If "+" moves an arm inward, flip LEFT_DIRECTION / RIGHT_DIRECTION in FlowerArms.java and calibrate again.
- * 5. Redeploy, run this again and press R1 to check BLOCK (45 deg) and FLAT (90 deg).
+ * 5. Redeploy, run this again and press R1 to check BLOCK (60 deg) and FLAT (90 deg).
  */
 @TeleOp(name = "BioBuzz: Flower Arm Calibration", group = "BioBuzz Test")
 public class FlowerArmCalibration extends LinearOpMode {
