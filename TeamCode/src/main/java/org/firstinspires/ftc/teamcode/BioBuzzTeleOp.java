@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.subsystems.FlowerArms;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
 
 /*
  * BioBuzz (2026-27) robot-centric TeleOp for the Everybot build on a Mecanum drive.
@@ -16,6 +18,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *   Control Hub   servo port 0: "Left Flower Arm" servo port 1: "Right Flower Arm"
  *   Expansion Hub motor port 1: "Catapult Right"  motor port 2: "Catapult Left"
  *   Expansion Hub motor port 3: "Intake"
+ *
+ * Hardware setup and tuning values live in shared classes so Autonomous uses exactly the same settings:
+ *   Robot.java                   intake, catapult and flower arms (classes in subsystems/)
+ *   subsystems/MecanumDrive.java drive motors
  *
  * Driven with gamepad1 (PlayStation DualSense: Cross = A, Circle = B, Square = X,
  * Triangle = Y, Share/Create = BACK, L3 = left stick button). Full map: GAMEPAD_MAPPING.md.
@@ -31,7 +37,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *                        (IDLE, no power, at start until RB or RT is first pressed)
  *  A / Cross (press)     flower arms one stage OUT: UP -> BLOCK (60 deg) -> FLAT (90 deg)
  *  B / Circle (press)    flower arms one stage IN:  FLAT -> BLOCK -> UP
- *                        (arms go to UP when TeleOp starts; positions are in FlowerArms.java)
+ *                        (arms go to UP when TeleOp starts; positions are in subsystems/FlowerArms.java)
  *  BACK + X/A/Y/B        motor test: FL / BL / FR / BR wheel
  *
  * FIRST TEST: lift the robot. The two catapult motors are geared together, so if one
@@ -48,68 +54,12 @@ public class BioBuzzTeleOp extends LinearOpMode {
     // Trigger travel (0..1) needed to count as "pressed".
     static final double TRIGGER_THRESHOLD = 0.2;
 
-    // Intake powers (from Everybot code).
-    static final double INTAKE_IN_POWER  =  1.0;
-    static final double INTAKE_OUT_POWER = -0.9;
-
-    // Catapult powers (from Everybot code). Positive power drives the arm DOWN.
-    static final double CATAPULT_UP_POWER   = -1.0;
-    static final double CATAPULT_DOWN_POWER =  1.0;
-    // Pulls against the rubber band to keep the arm down after a launch. Raise if the band
-    // lifts the arm back up; lower if the motors buzz or get hot while holding.
-    static final double CATAPULT_HOLD_POWER =  0.2;
-
-    private enum CatapultMode { IDLE, UP, DOWN, HOLD }
-
     private final ElapsedTime runtime = new ElapsedTime();
-    private DcMotor frontLeftDrive = null;
-    private DcMotor backLeftDrive = null;
-    private DcMotor frontRightDrive = null;
-    private DcMotor backRightDrive = null;
-    private DcMotor intake = null;
-    private DcMotor catapultLeft = null;
-    private DcMotor catapultRight = null;
-    private FlowerArms flowerArms = null;
 
     @Override
     public void runOpMode() {
-
-        // These names must match the names in the robot's active configuration file.
-        frontLeftDrive = hardwareMap.get(DcMotor.class, "Front Left");
-        backLeftDrive = hardwareMap.get(DcMotor.class, "Back Left");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "Front Right");
-        backRightDrive = hardwareMap.get(DcMotor.class, "Back Right");
-
-        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-
-        // Drive purely on joystick power, and hold position when the sticks are released.
-        for (DcMotor motor : new DcMotor[] {frontLeftDrive, backLeftDrive, frontRightDrive, backRightDrive}) {
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
-
-        // Forward should pull game pieces IN. Flip if the intake spits them out.
-        intake = hardwareMap.get(DcMotor.class, "Intake");
-        intake.setDirection(DcMotor.Direction.FORWARD);
-        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // The two catapult motors face each other, so one is reversed (as in the Everybot code).
-        // With these directions, positive power must move the arm DOWN on BOTH motors.
-        catapultLeft = hardwareMap.get(DcMotor.class, "Catapult Left");
-        catapultRight = hardwareMap.get(DcMotor.class, "Catapult Right");
-        catapultLeft.setDirection(DcMotor.Direction.FORWARD);
-        catapultRight.setDirection(DcMotor.Direction.REVERSE);
-        for (DcMotor motor : new DcMotor[] {catapultLeft, catapultRight}) {
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
-
-        // Servo positions, directions and stage angles live in FlowerArms.java.
-        flowerArms = new FlowerArms(hardwareMap);
+        MecanumDrive drive = new MecanumDrive(hardwareMap);
+        Robot robot = new Robot(hardwareMap);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -118,47 +68,17 @@ public class BioBuzzTeleOp extends LinearOpMode {
         runtime.reset();
 
         // Arms point straight up as soon as TeleOp starts.
-        flowerArms.setStage(FlowerArms.Stage.UP);
+        robot.flowerArms.setStage(FlowerArms.Stage.UP);
 
         boolean slowMode = false;
         boolean lastSlowButton = false;
         boolean lastFlowerOutButton = false;
         boolean lastFlowerInButton = false;
-        boolean catapultUsed = false;   // No hold power until the driver first moves the catapult.
 
         while (opModeIsActive()) {
             boolean motorTest = gamepad1.back;
 
             // ---------------- DRIVE ----------------
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral =  gamepad1.left_stick_x;
-            double yaw     =  gamepad1.right_stick_x;
-
-            double frontLeftPower  = axial + lateral + yaw;
-            double frontRightPower = axial - lateral - yaw;
-            double backLeftPower   = axial - lateral + yaw;
-            double backRightPower  = axial + lateral - yaw;
-
-            // Normalize the values so no wheel power exceeds 100%, preserving the requested motion.
-            double max = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
-            max = Math.max(max, Math.abs(backLeftPower));
-            max = Math.max(max, Math.abs(backRightPower));
-
-            if (max > 1.0) {
-                frontLeftPower  /= max;
-                frontRightPower /= max;
-                backLeftPower   /= max;
-                backRightPower  /= max;
-            }
-
-            // Motor test mode: hold BACK and press X/A/Y/B to run a single wheel forward.
-            if (motorTest) {
-                frontLeftPower  = gamepad1.x ? 1.0 : 0.0;
-                backLeftPower   = gamepad1.a ? 1.0 : 0.0;
-                frontRightPower = gamepad1.y ? 1.0 : 0.0;
-                backRightPower  = gamepad1.b ? 1.0 : 0.0;
-            }
-
             // Click the left stick (L3) to toggle slow mode.
             boolean slowButton = gamepad1.left_stick_button;
             if (slowButton && !lastSlowButton) {
@@ -168,45 +88,34 @@ public class BioBuzzTeleOp extends LinearOpMode {
 
             double speedScale = (slowMode || motorTest) ? SLOW_MODE_SCALE : 1.0;
 
-            frontLeftDrive.setPower(frontLeftPower * speedScale);
-            frontRightDrive.setPower(frontRightPower * speedScale);
-            backLeftDrive.setPower(backLeftPower * speedScale);
-            backRightDrive.setPower(backRightPower * speedScale);
+            if (motorTest) {
+                // Motor test mode: hold BACK and press X/A/Y/B to run a single wheel forward.
+                drive.setWheelPowers(
+                        gamepad1.x ? speedScale : 0.0,    // front left
+                        gamepad1.y ? speedScale : 0.0,    // front right
+                        gamepad1.a ? speedScale : 0.0,    // back left
+                        gamepad1.b ? speedScale : 0.0);   // back right
+            } else {
+                drive.drive(
+                        -gamepad1.left_stick_y,   // Note: pushing stick forward gives negative value
+                        gamepad1.left_stick_x,
+                        gamepad1.right_stick_x,
+                        speedScale);
+            }
 
             // ---------------- INTAKE ----------------
             // LB (out) wins if both are pressed, as in the Everybot code.
-            double intakePower = 0.0;
             if (gamepad1.left_bumper) {
-                intakePower = INTAKE_OUT_POWER;
+                robot.intake.out();
             } else if (gamepad1.left_trigger > TRIGGER_THRESHOLD) {
-                intakePower = INTAKE_IN_POWER;
+                robot.intake.in();
+            } else {
+                robot.intake.stop();
             }
-            intake.setPower(intakePower);
 
             // ---------------- CATAPULT ----------------
-            // RT (down) wins if both are pressed, as in the Everybot code.
-            CatapultMode catapultMode;
-            double catapultPower;
-            if (gamepad1.right_trigger > TRIGGER_THRESHOLD) {
-                catapultMode = CatapultMode.DOWN;
-                catapultPower = CATAPULT_DOWN_POWER;
-            } else if (gamepad1.right_bumper) {
-                catapultMode = CatapultMode.UP;
-                catapultPower = CATAPULT_UP_POWER;
-            } else if (catapultUsed) {
-                // Slight feed-forward keeps the catapult down while driving.
-                catapultMode = CatapultMode.HOLD;
-                catapultPower = CATAPULT_HOLD_POWER;
-            } else {
-                // Catapult starts in its initial position: leave it braked until first used.
-                catapultMode = CatapultMode.IDLE;
-                catapultPower = 0.0;
-            }
-            if (catapultMode == CatapultMode.UP || catapultMode == CatapultMode.DOWN) {
-                catapultUsed = true;
-            }
-            catapultLeft.setPower(catapultPower);
-            catapultRight.setPower(catapultPower);
+            // RT (down) wins over RB (launch). Neither: HOLD once used, IDLE (no power) before first use.
+            robot.catapult.manual(gamepad1.right_bumper, gamepad1.right_trigger > TRIGGER_THRESHOLD);
 
             // ---------------- FLOWER ARMS ----------------
             // Each press of A moves one stage out, each press of B one stage in (UP <-> BLOCK <-> FLAT).
@@ -215,25 +124,23 @@ public class BioBuzzTeleOp extends LinearOpMode {
             boolean flowerInButton = gamepad1.b;
             if (!motorTest) {
                 if (flowerOutButton && !lastFlowerOutButton) {
-                    flowerArms.stepOut();
+                    robot.flowerArms.stepOut();
                 } else if (flowerInButton && !lastFlowerInButton) {
-                    flowerArms.stepIn();
+                    robot.flowerArms.stepIn();
                 }
             }
             lastFlowerOutButton = flowerOutButton;
             lastFlowerInButton = flowerInButton;
 
+            robot.update();
+
             // ---------------- TELEMETRY ----------------
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Speed", motorTest ? "MOTOR TEST (X=FL A=BL Y=FR B=BR)"
                                                  : slowMode ? "SLOW" : "FULL");
-            telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower * speedScale, frontRightPower * speedScale);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower * speedScale, backRightPower * speedScale);
-            telemetry.addData("Intake", "%4.2f", intakePower);
-            telemetry.addData("Catapult", "%s (%4.2f)", catapultMode, catapultPower);
-            telemetry.addData("Flower Arms", "%s (%d deg) L=%4.3f R=%4.3f",
-                    flowerArms.getStage(), (int) flowerArms.getStage().degreesOut,
-                    flowerArms.getLeftPosition(), flowerArms.getRightPosition());
+            telemetry.addData("Front left/Right", "%4.2f, %4.2f", drive.getFrontLeftPower(), drive.getFrontRightPower());
+            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", drive.getBackLeftPower(), drive.getBackRightPower());
+            robot.addTelemetry(telemetry);
             telemetry.update();
         }
     }

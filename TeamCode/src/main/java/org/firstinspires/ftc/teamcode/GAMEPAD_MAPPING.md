@@ -75,7 +75,7 @@ The arms have three stages, measured outward from vertical:
 
 - Each press moves one stage; holding the button does not keep moving. Cross at FLAT or Circle at UP does nothing.
 - Both arms move to **UP** when TeleOp starts.
-- Servo positions are set in `FlowerArms.java`. Use the **BioBuzz: Flower Arm Calibration** OpMode to find each arm's UP position.
+- Servo positions are set in `subsystems/FlowerArms.java`. Use the **BioBuzz: Flower Arm Calibration** OpMode to find each arm's UP position.
 
 ## Motor Test Mode
 
@@ -103,17 +103,17 @@ Hold **Create** and lift the robot so the wheels are off the ground.
 
 ## Tuning Values
 
-These constants are at the top of `BioBuzzTeleOp.java`:
+These constants are at the top of `BioBuzzTeleOp.java` (`SLOW_MODE_SCALE`), `subsystems/Intake.java` and `subsystems/Catapult.java`:
 
 | Constant | Value | What it does |
 |---|---|---|
 | `SLOW_MODE_SCALE` | 0.4 | Drive power in slow mode |
-| `INTAKE_IN_POWER` / `INTAKE_OUT_POWER` | 1.0 / -0.9 | Intake speeds |
-| `CATAPULT_UP_POWER` | -1.0 | Launch power (already maximum) |
-| `CATAPULT_DOWN_POWER` | 1.0 | R2 return power |
-| `CATAPULT_HOLD_POWER` | 0.2 | Power that keeps the arm down against the rubber band |
+| `Intake.IN_POWER` / `Intake.OUT_POWER` | 1.0 / -0.9 | Intake speeds |
+| `Catapult.UP_POWER` | -1.0 | Launch power (already maximum) |
+| `Catapult.DOWN_POWER` | 1.0 | R2 return power |
+| `Catapult.HOLD_POWER` | 0.2 | Power that keeps the arm down against the rubber band |
 
-Flower arm positions are in `FlowerArms.java`:
+Flower arm positions are in `subsystems/FlowerArms.java`:
 
 | Constant | Value | What it does |
 |---|---|---|
