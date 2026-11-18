@@ -50,7 +50,7 @@ All controls are on **gamepad1**, a PlayStation DualSense (wired). Gamepad2 is n
 |---|---|
 | R1 (hold) | **LAUNCH**: full power up while held |
 | R2 (hold) | **DOWN** at full power |
-| Neither | **HOLD**: 20% power keeps the arm down against the rubber band |
+| Neither | **HOLD**: 20% power keeps the arm down against the rubber bands |
 
 - **Start of TeleOp:** the catapult is **IDLE** (no power, braked) so it stays in its initial position.
   Holding power only begins after R1 or R2 is pressed for the first time.
@@ -111,7 +111,7 @@ These constants are at the top of `BioBuzzTeleOp.java` (`SLOW_MODE_SCALE`), `sub
 | `Intake.IN_POWER` / `Intake.OUT_POWER` | 1.0 / -0.9 | Intake speeds |
 | `Catapult.UP_POWER` | -1.0 | Launch power (already maximum) |
 | `Catapult.DOWN_POWER` | 1.0 | R2 return power |
-| `Catapult.HOLD_POWER` | 0.2 | Power that keeps the arm down against the rubber band |
+| `Catapult.HOLD_POWER` | 0.2 | Power that keeps the arm down against the rubber bands |
 
 Flower arm positions are in `subsystems/FlowerArms.java`:
 

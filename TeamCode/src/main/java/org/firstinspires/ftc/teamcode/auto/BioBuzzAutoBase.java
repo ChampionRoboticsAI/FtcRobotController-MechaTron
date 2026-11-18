@@ -51,6 +51,9 @@ public abstract class BioBuzzAutoBase extends LinearOpMode {
     /** Give up on a single drive move after this long and continue with the next step. */
     public static double MOVE_TIMEOUT_SECONDS = 4.0;
 
+    /** Give up on a followPath() step after this long (curved paths are longer than single moves). */
+    public static double PATH_TIMEOUT_SECONDS = 8.0;
+
     /** An in-place turn is done when heading is within this many degrees and the robot has stopped rotating. */
     public static double TURN_TOLERANCE_DEGREES = 2.0;
     public static double TURN_SETTLED_RAD_PER_SEC = 0.25;
@@ -198,6 +201,36 @@ public abstract class BioBuzzAutoBase extends LinearOpMode {
             tick();
         }
         // On a timeout keep pushing toward the planned end while the next step runs.
+        if (follower.following()) {
+            follower.hold(end);
+        }
+        target = end;
+    }
+
+    /** Follows a Pedro path (e.g. from the Visualizer) at full speed. Paths are used as-is: NOT mirrored. */
+    protected void followPath(Path path) {
+        followPath(path, FULL_SPEED);
+    }
+
+    /**
+     * Follows a Pedro path, capped at maxSpeed inches/second ({@link #FULL_SPEED} for no cap).
+     * The path should start where the previous step ended; the next relative move starts from its end pose.
+     */
+    protected void followPath(Path path, double maxSpeed) {
+        if (!running()) {
+            return;
+        }
+        if (!Double.isInfinite(maxSpeed)) {
+            path = path.with(Constants.foresightConfig.maxPathSpeed.at(maxSpeed));
+        }
+        Pose end = path.endPose();
+        follower.follow(path);
+
+        ElapsedTime timer = new ElapsedTime();
+        while (running() && follower.isBusy() && timer.seconds() < PATH_TIMEOUT_SECONDS) {
+            tick();
+        }
+        // On a timeout keep pushing toward the end of the path while the next step runs.
         if (follower.following()) {
             follower.hold(end);
         }

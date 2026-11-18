@@ -1,16 +1,17 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.subsystems.FlowerArms;
 
 /**
  * Scenario 1 from AUTONOMOUS.md. Each block below matches one numbered step in that file.
+ * The drive paths (Path1, Path2, Path3) are field-coordinate curves in Scenario1Path.java.
  *
- * Start: robot against the perimeter wall on our alliance side, holding the 4 preloaded Pollen,
- * facing the direction of the first "drive straight 24 inches".
- * The routine runs exactly as written; use "BioBuzz: Scenario 1 (Mirrored)" from the other side
- * of the field, where every left/right is swapped.
+ * Start: place the robot at Scenario1Path's start pose (x 59.1, y 6.5, facing 90 deg) holding the
+ * 4 preloaded Pollen. The INIT telemetry shows the pose the robot thinks it is at.
+ * Use "BioBuzz: Scenario 1 (Mirrored)" from the other alliance side: the paths are flipped across the field centerline.
  *
  * Tuning values are at the top of this class and in subsystems/Catapult.java (launch timing).
  */
@@ -24,10 +25,27 @@ public class Scenario1Auto extends BioBuzzAutoBase {
     public static double FLOWER_ARM_SETTLE_SECONDS = 0.5;
 
     /**
-     * Step 4: top speed (inches/second) while sweeping Pollen into the intake.
-     * FULL_SPEED by default; lower it (e.g. 25) if Pollen gets pushed away instead of picked up.
+     * Top speed (inches/second) for each path. FULL_SPEED by default; lower one (e.g. 25) if the
+     * robot overshoots, or if Pollen is pushed away instead of picked up.
      */
-    public static double SWEEP_SPEED = FULL_SPEED;
+    public static double PATH1_SPEED = FULL_SPEED;
+    public static double PATH2_SPEED = FULL_SPEED;
+    public static double PATH3_SPEED = FULL_SPEED;
+
+    private Scenario1Path paths;
+
+    /** Built on first use so the mirrored subclass gets mirrored paths. */
+    private Scenario1Path paths() {
+        if (paths == null) {
+            paths = new Scenario1Path(mirrored());
+        }
+        return paths;
+    }
+
+    @Override
+    protected Pose startPose() {
+        return paths().start();
+    }
 
     @Override
     protected void runRoutine() {
@@ -46,31 +64,20 @@ public class Scenario1Auto extends BioBuzzAutoBase {
         robot.flowerArms.setStage(FlowerArms.Stage.FLAT);
         waitSeconds(FLOWER_ARM_SETTLE_SECONDS);
 
-        // 4. Straight 24, left 24, right 12, left 36 - sweeps Pollen in through the intake.
-        step("4. Sweep pollen");
-        move(24, 0, SWEEP_SPEED);
-        move(0, 24, SWEEP_SPEED);
-        move(0, -12, SWEEP_SPEED);
-        move(0, 36, SWEEP_SPEED);
+        // 4. Run Path1.
+        step("4. Path1");
+        followPath(paths().path1(), PATH1_SPEED);
 
-        // 5. Back 36, turn right, straight 60, turn right, straight 24, turn right, reverse 24.
-        step("5. Drive to launch spot");
-        back(36);
-        turnRight(90);
-        forward(60);
-        turnRight(90);
-        forward(24);
-        turnRight(90);
-        back(24);
+        // 5. Run Path2.
+        step("5. Path2");
+        followPath(paths().path2(), PATH2_SPEED);
 
         // 6. Launch catapult and pull catapult arm down.
         step("6. Launch collected pollen");
         launchCatapult();
 
-        // 7. Straight 24, turn right, forward 40.
-        step("7. Park");
-        forward(24);
-        turnRight(90);
-        forward(40);
+        // 7. Run Path3.
+        step("7. Path3");
+        followPath(paths().path3(), PATH3_SPEED);
     }
 }
