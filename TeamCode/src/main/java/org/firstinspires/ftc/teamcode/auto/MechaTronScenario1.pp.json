@@ -1,9 +1,9 @@
 {
   "version": "2.0.0",
-  "timestamp": "2026-11-18T20:46:34.620Z",
+  "timestamp": "2026-11-19T21:45:40.227Z",
   "startPoint": {
-    "x": 59.06012110726643,
-    "y": 6.531141868512111,
+    "x": 58.5,
+    "y": 9.2,
     "locked": false,
     "headingDeg": 90
   },
@@ -19,21 +19,21 @@
       "waitAfterName": "",
       "kind": "atomic",
       "endPoint": {
-        "x": 4.749690428915871,
-        "y": 46.68011254773173
+        "x": 9.331595190820632,
+        "y": 46.814874452493626
       },
       "controlPoints": [
         {
-          "x": 58.06189083820663,
-          "y": 43.85672514619883
+          "x": 52.401890838206626,
+          "y": 49.112439431913124
         }
       ],
       "heading": {
-        "type": "linear",
+        "type": "tangential",
         "startDeg": 90,
         "endDeg": 180,
         "degrees": 0,
-        "reverse": false,
+        "reverse": true,
         "piecewiseHeading": {
           "segments": [
             {
@@ -51,39 +51,47 @@
       }
     },
     {
-      "kind": "atomic",
       "id": "line-mwmicswn-xbxb7v",
+      "color": "#76b7b2",
+      "name": "",
+      "locked": false,
+      "waitBeforeMs": 0,
+      "waitAfterMs": 0,
+      "waitBeforeName": "",
+      "waitAfterName": "",
+      "kind": "atomic",
       "endPoint": {
-        "x": 59.946074742734034,
-        "y": 140.1453665068423
+        "x": 61.15893188559118,
+        "y": 133.67679507827083
       },
       "controlPoints": [
         {
-          "x": 20.962962962962962,
-          "y": 115.84795321637426
+          "x": 23.792962962962967,
+          "y": 125.0117627401838
         },
         {
-          "x": 61.785575048732944,
-          "y": 108.12475633528267
+          "x": 62.459384572542476,
+          "y": 107.18142300194934
         }
       ],
       "heading": {
         "type": "tangential",
         "reverse": true
-      },
-      "color": "#76b7b2",
+      }
+    },
+    {
+      "id": "line-mwmiedgh-l9nija",
+      "color": "#b07aa1",
+      "name": "",
       "locked": false,
       "waitBeforeMs": 0,
       "waitAfterMs": 0,
       "waitBeforeName": "",
-      "waitAfterName": ""
-    },
-    {
+      "waitAfterName": "",
       "kind": "atomic",
-      "id": "line-mwmiedgh-l9nija",
       "endPoint": {
-        "x": 4.6041944719916685,
-        "y": 107.80073761054123
+        "x": 9.994670662467858,
+        "y": 111.16978522958885
       },
       "controlPoints": [
         {
@@ -111,13 +119,7 @@
             }
           ]
         }
-      },
-      "color": "#b07aa1",
-      "locked": false,
-      "waitBeforeMs": 0,
-      "waitAfterMs": 0,
-      "waitBeforeName": "",
-      "waitAfterName": ""
+      }
     }
   ],
   "shapes": [
@@ -302,8 +304,8 @@
     "strafeVelocity": 65,
     "aVelocity": 3.141592653589793,
     "kFriction": 0.1,
-    "rLength": 16,
-    "rWidth": 16,
+    "rLength": 17.5,
+    "rWidth": 17.5,
     "safetyMargin": 1,
     "maxAcceleration": 50,
     "maxDeceleration": 50

@@ -30,14 +30,21 @@ public class Scenario1Path {
 
     public Scenario1Path(boolean mirrored) {
         this.mirrored = mirrored;
-        start          = pose(58.5, 9.2, 90);
-        point1         = pose(4.7497, 46.6801, 0);
-        point1Control1 = pose(58.0619, 43.8567, 0);
-        point2         = pose(59.9461, 140.1454, -86.7121);
-        point2Control1 = pose(20.963, 115.848, 0);
-        point2Control2 = pose(61.7856, 108.1248, 0);
-        point3         = pose(4.6042, 107.8007, 0);
+        start = pose(58.5, 9.2, 90);
+        Pose point1Raw = pose(9.3316, 46.8149, 0); // heading is calculated below
+        point1Control1 = pose(52.4019, 49.1124, 0);
+        point2 = pose(61.1589, 133.6768, -87.19);
+        point2Control1 = pose(23.793, 125.0118, 0);
+        point2Control2 = pose(62.4594, 107.1814, 0);
+        point3 = pose(9.9947, 111.1698, 0);
         point3Control1 = pose(36.2714, 112.2622, 0);
+
+        // Path2 drives in reverse (back of the robot leading). Make Path1 END facing exactly the way
+        // Path2 STARTS, so the robot does not turn when switching paths. That heading points from
+        // Path2's first control point back to point1 (the curve's starting direction, flipped).
+        point1 = point1Raw.withHeading(Math.atan2(
+                point1Raw.y() - point2Control1.y(),
+                point1Raw.x() - point2Control1.x()));
     }
 
     /** Builds a pose from Visualizer values (degrees), mirrored if this is the mirrored side. */
@@ -54,7 +61,8 @@ public class Scenario1Path {
     }
 
     public Path path1() {
-        return Paths.curve(start, point1Control1, point1).constant(point1);
+        // Turns gradually from the start heading to the heading Path2 needs (shortest way round).
+        return Paths.curve(start, point1Control1, point1).linear(start, point1);
     }
 
     public Path path2() {
