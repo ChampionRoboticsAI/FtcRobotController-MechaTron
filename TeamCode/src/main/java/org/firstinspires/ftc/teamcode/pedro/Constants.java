@@ -52,10 +52,10 @@ public class Constants {
     public static PinpointConfig localizerConfig = new PinpointConfig(c -> {
         c.name.set("pinpoint");
         c.podType.set(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        c.xPodOffset.set(0.0);
-        c.yPodOffset.set(0.0);
+        c.xPodOffset.set(2.7905720988596516);
+        c.yPodOffset.set(0.43468918387345445);
         c.xPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
-        c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.REVERSED);
         c.globalDistanceUnit.set(DistanceUnit.INCH);
         c.offsetUnits.set(DistanceUnit.INCH);
     });
@@ -65,27 +65,27 @@ public class Constants {
     // Follower can be constructed. Re-run the Foresight Tuner after the Pinpoint Tuner and replace them.
     public static ForesightConfig foresightConfig = new ForesightConfig(
             c -> {
-                Controller primaryTranslationalForward = Controller.proportional(0.3465517621917762);
-                Controller secondaryTranslationalForward = Controller.proportional(0.12804161609623108);
-                Controller primaryTranslationalLateral = Controller.proportional(2.872886393417167);
-                Controller secondaryTranslationalLateral = Controller.proportional(1.0614547574294109);
+                Controller primaryTranslationalForward = Controller.proportional(0.3303705601736964);
+                Controller secondaryTranslationalForward = Controller.proportional(0.12206309432023157);
+                Controller primaryTranslationalLateral = Controller.proportional(0.559665975145598);
+                Controller secondaryTranslationalLateral = Controller.proportional(0.20678162326602068);
 
                 c.forwardTranslational.set(Controller.piecewise(secondaryTranslationalForward).put(2.5, primaryTranslationalForward));
                 c.strafeTranslational.set(Controller.piecewise(secondaryTranslationalLateral).put(2.5, primaryTranslationalLateral));
 
-                c.coast.set(Controller.proportionalFeedforward(0.018490952888152876));
-                c.brake.set(Controller.proportionalFeedforward(0.015717309954929943));
+                c.coast.set(Controller.proportionalFeedforward(0.018710838876781318));
+                c.brake.set(Controller.proportionalFeedforward(0.01590421304526412));
 
-                c.headingFeedback.set(Controller.proportional(12.281786102893301));
-                c.headingBrakeCoefficients.set(Vector2D.cartesian(0.06139836247742579, 6.321832078074226E-4));
+                c.headingFeedback.set(Controller.proportional(6.014763779707165));
+                c.headingBrakeCoefficients.set(Vector2D.cartesian(0.03993813593313058, 0.007908686187312644));
 
-                c.linearBrakeCoefficients.set(Matrix.diag(0.10579129242595278, 0.09580580962131512));
-                c.quadraticBrakeCoefficients.set(Matrix.diag(-1.8613035374189795E-4, 3.0331836771166343E-4));
+                c.linearBrakeCoefficients.set(Matrix.diag(0.10591660365211525, 0.043733949417021065));
+                c.quadraticBrakeCoefficients.set(Matrix.diag(5.4595267045757464E-5, 0.0019779532961136485));
 
-                c.maxAchievableForwardVelocity.set(60.801051034920384);
-                c.maxAchievableStrafeVelocity.set(45.98194035058009);
-                c.naturalForwardDeceleration.set(53.44487382794588);
-                c.naturalStrafeDeceleration.set(94.5163785165338);
+                c.maxAchievableForwardVelocity.set(57.76411044436386);
+                c.maxAchievableStrafeVelocity.set(44.62539539243014);
+                c.naturalForwardDeceleration.set(38.86864334092874);
+                c.naturalStrafeDeceleration.set(70.01422821560132);
             }
     );
 
