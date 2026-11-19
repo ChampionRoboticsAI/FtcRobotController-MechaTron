@@ -56,7 +56,9 @@ All controls are on **gamepad1**, a PlayStation DualSense (wired). Gamepad2 is n
   Holding power only begins after R1 or R2 is pressed for the first time.
 - **Hold R1 until the arm reaches the top.** Releasing early switches to hold power, which pulls the arm back down mid-swing.
 - **R2 wins** if both R1 and R2 are pressed.
-- The rubber band holds the arm up after a launch. Use R2 to bring it down; the hold power then keeps it down.
+- **Automatic return:** 2 seconds after R1 is released, the arm is pulled down at full power for 0.8 s
+  (`Catapult.PULL_DOWN_SECONDS`), then hold power keeps it down. No need to press R2.
+  Pressing R1 or R2 during the wait cancels the automatic return; R2 still works any time.
 
 ## Flower Arms
 
@@ -112,6 +114,7 @@ These constants are at the top of `BioBuzzTeleOp.java` (`SLOW_MODE_SCALE`), `sub
 | `Catapult.UP_POWER` | -1.0 | Launch power (already maximum) |
 | `Catapult.DOWN_POWER` | 1.0 | R2 return power |
 | `Catapult.HOLD_POWER` | 0.2 | Power that keeps the arm down against the rubber bands |
+| `Catapult.AUTO_DOWN_DELAY_SECONDS` | 2.0 | Wait after releasing R1 before the arm is pulled down automatically |
 
 Flower arm positions are in `subsystems/FlowerArms.java`:
 

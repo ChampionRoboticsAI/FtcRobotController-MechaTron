@@ -33,13 +33,20 @@ public class Catapult {
     public static double LAUNCH_SECONDS    = 0.6;
     public static double PULL_DOWN_SECONDS = 0.8;
 
+    // TeleOp auto return: after the launch button is released, wait this long, then pull the arm
+    // down for PULL_DOWN_SECONDS automatically (no need to press the down button). TODO: tune on the robot.
+    public static double AUTO_DOWN_DELAY_SECONDS = 2.0;
+
     private final DcMotor left;
     private final DcMotor right;
     private final ElapsedTime sequenceTimer = new ElapsedTime();
+    private final ElapsedTime autoDownTimer = new ElapsedTime();
 
     private Mode mode = Mode.IDLE;
     private boolean sequenceRunning = false;
     private boolean used = false;   // No hold power until the arm has been moved once.
+    private boolean autoDownPending = false;
+    private boolean lastLaunchButton = false;
 
     public Catapult(HardwareMap hardwareMap) {
         // The two catapult motors face each other, so one is reversed (as in the Everybot code).
@@ -58,17 +65,44 @@ public class Catapult {
      * TeleOp control, call every loop. Down wins if both are pressed (as in the Everybot code).
      * Neither pressed: HOLD once the catapult has been used, otherwise IDLE so it stays in its start position.
      * Pressing either button cancels a running {@link #launch()} sequence.
+     * Releasing the launch button starts an automatic return: after AUTO_DOWN_DELAY_SECONDS the arm is
+     * pulled down for PULL_DOWN_SECONDS, then held. Pressing either button cancels the automatic return.
      */
     public void manual(boolean launchButton, boolean downButton) {
+        if (lastLaunchButton && !launchButton && !downButton) {
+            autoDownPending = true;
+            autoDownTimer.reset();
+        }
+        lastLaunchButton = launchButton;
+
         if (downButton) {
             sequenceRunning = false;
+            autoDownPending = false;
             setMode(Mode.DOWN);
         } else if (launchButton) {
             sequenceRunning = false;
+            autoDownPending = false;
             setMode(Mode.UP);
-        } else if (!sequenceRunning) {
+        } else if (sequenceRunning) {
+            // update() drives the launch sequence.
+        } else if (autoDownPending) {
+            double t = autoDownTimer.seconds();
+            if (t < AUTO_DOWN_DELAY_SECONDS) {
+                setMode(Mode.HOLD);
+            } else if (t < AUTO_DOWN_DELAY_SECONDS + PULL_DOWN_SECONDS) {
+                setMode(Mode.DOWN);
+            } else {
+                autoDownPending = false;
+                setMode(Mode.HOLD);
+            }
+        } else {
             setMode(used ? Mode.HOLD : Mode.IDLE);
         }
+    }
+
+    /** True while TeleOp is waiting to (or currently) pulling the arm down automatically after a launch. */
+    public boolean isAutoReturning() {
+        return autoDownPending;
     }
 
     /** Starts a timed launch: full power up, then full power down, then hold. Needs {@link #update()} every loop. */

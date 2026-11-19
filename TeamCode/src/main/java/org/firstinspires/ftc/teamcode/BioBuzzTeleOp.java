@@ -35,6 +35,7 @@ import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
  *  RT (hold)             catapult DOWN (wins over RB, as in the Everybot code)
  *  neither RB nor RT     catapult HOLD: small power keeps the arm down against the rubber band
  *                        (IDLE, no power, at start until RB or RT is first pressed)
+ *  RB released           catapult pulls itself DOWN automatically after Catapult.AUTO_DOWN_DELAY_SECONDS
  *  A / Cross (press)     flower arms one stage OUT: UP -> BLOCK (60 deg) -> FLAT (90 deg)
  *  B / Circle (press)    flower arms one stage IN:  FLAT -> BLOCK -> UP
  *                        (arms go to UP when TeleOp starts; positions are in subsystems/FlowerArms.java)

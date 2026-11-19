@@ -45,7 +45,7 @@ public class Robot {
     public void addTelemetry(Telemetry telemetry) {
         telemetry.addData("Intake", "%4.2f", intake.getPower());
         telemetry.addData("Catapult", "%s (%4.2f)%s", catapult.getMode(), catapult.getPower(),
-                catapult.isBusy() ? " launching" : "");
+                catapult.isBusy() ? " launching" : catapult.isAutoReturning() ? " auto return" : "");
         telemetry.addData("Flower Arms", "%s (%d deg) L=%4.3f R=%4.3f",
                 flowerArms.getStage(), (int) flowerArms.getStage().degreesOut,
                 flowerArms.getLeftPosition(), flowerArms.getRightPosition());
