@@ -35,6 +35,7 @@ Pedro Pathing [QuickStart](https://github.com/Pedro-Pathing/Quickstart)
 Pedro Pathing [Tuning](https://pedropathing.com/docs/pathing/tuning)
 
 [goBuilda 4-Bar Odometry Pod](https://www.gobilda.com/4-bar-odometry-pod-32mm-wheel/)
+[Pinpoint V2 Odometry Computer (IMU Sensor Fusion for 2 Wheel Odometry)](https://www.gobilda.com/pinpoint-v2-odometry-computer-imu-sensor-fusion-for-2-wheel-odometry/)
 
 
 ## Controller Hub port mapping
@@ -44,16 +45,17 @@ Pedro Pathing [Tuning](https://pedropathing.com/docs/pathing/tuning)
   - Port 1: Front Right (GoBuilda 5202/3/4 series)
   - Port 2: Back Left (GoBuilda 5202/3/4 series)
   - Port 3: Back Right (GoBuilda 5202/3/4 series)
-  - Port 0 Encoder: x1 encoder - left forward pod, wheel parallel to the drive direction (4-Bar Odometry Pod). Pedro `leftEncoderName = "Front Left"`
-  - Port 3 Encoder: x2 encoder - right forward pod, wheel parallel to the drive direction (4-Bar Odometry Pod). Pedro `rightEncoderName = "Back Right"`
-  - Port 2 Encoder: y encoder - strafe pod, wheel perpendicular to the drive direction (4-Bar Odometry Pod). Pedro `strafeEncoderName = "Back Left"`
+  - Motor encoder ports are not used (odometry pods are wired to the Pinpoint, see I2C below).
 
 - Servos
   - Port 0: Left Flower Arm (REV Smart Robot Servos V2)[https://www.revrobotics.com/Smart-servo-v2]
   - Port 1: Right Flower Arm (REV Smart Robot Servos V2)[https://www.revrobotics.com/Smart-servo-v2]
 
 - I2C Bus 0
-  - Port 0: imu (REV internal IMU (BHI260AP))
+  - Port 0: Pinpoint V2 Odometry Computer. Driver Hub configuration: device type `goBILDA Pinpoint Odometry Computer`, name `pinpoint` (Pedro `localizerConfig.name`)
+    - Pinpoint X port: forward pod, wheel parallel to the drive direction (4-Bar Odometry Pod)
+    - Pinpoint Y port: strafe pod, wheel perpendicular to the drive direction (4-Bar Odometry Pod)
+    - Heading comes from the Pinpoint's own IMU, so the Control Hub internal IMU is not used by Pedro
 
 
 
