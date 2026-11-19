@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Catapult;
+import org.firstinspires.ftc.teamcode.subsystems.FlowerArms;
 
 import java.util.function.BooleanSupplier;
 
@@ -116,6 +117,9 @@ public abstract class BioBuzzAutoBase extends LinearOpMode {
         autoTimer.reset();
         follower.setPose(target);       // Zero out any drift from the robot being placed during INIT.
         follower.hold(target);          // Hold position while the first mechanism steps run.
+
+        // Power the flower arms to UP right away (same as TeleOp), so later stages move from a known position.
+        robot.flowerArms.setStage(FlowerArms.Stage.UP);
 
         runRoutine();
 

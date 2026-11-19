@@ -6,9 +6,11 @@ import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 
 /**
- * Scenario 1 drive paths in field coordinates (inches, from the Pedro Visualizer export
- * MechaTronScenario1.pp.json). When mirrored, every pose is flipped across the field centerline:
- * x -> 144 - x, heading -> 180 - heading.
+ * Scenario 1 drive paths in field coordinates (inches, degrees, from the Pedro Visualizer).
+ * When mirrored, every pose is flipped across the field centerline: x -> 144 - x, heading -> 180 - heading.
+ *
+ * To update from a new Visualizer export: copy only the numbers into the pose(...) lines below.
+ * Do NOT paste over the whole file, or the package line and mirroring are lost and the build breaks.
  */
 public class Scenario1Path {
 
@@ -28,8 +30,8 @@ public class Scenario1Path {
 
     public Scenario1Path(boolean mirrored) {
         this.mirrored = mirrored;
-        start          = pose(59.0601, 6.5311, 90);
-        point1         = pose(4.7497, 46.6801, 180);
+        start          = pose(58.5, 9.2, 90);
+        point1         = pose(4.7497, 46.6801, 0);
         point1Control1 = pose(58.0619, 43.8567, 0);
         point2         = pose(59.9461, 140.1454, -86.7121);
         point2Control1 = pose(20.963, 115.848, 0);
@@ -52,7 +54,7 @@ public class Scenario1Path {
     }
 
     public Path path1() {
-        return Paths.curve(start, point1Control1, point1).linear(start, point1);
+        return Paths.curve(start, point1Control1, point1).constant(point1);
     }
 
     public Path path2() {
