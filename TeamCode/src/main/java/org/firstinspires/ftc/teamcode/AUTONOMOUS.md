@@ -6,6 +6,7 @@ Here are the steps for the scenario 1 autonomous game plan:
 1. Launch the catapult, then pull the catapult arm down
 2. Run the intake motors in reverse for 5 seconds so the flower hood can pop up. Then run the intake continuously in the forward direction
 3. Run Path1 from `Scenario1Path.java`
+4. Stop the intake
 
 ## Scenario 2
 Here are the steps for the scenario 2 autonomous game plan:

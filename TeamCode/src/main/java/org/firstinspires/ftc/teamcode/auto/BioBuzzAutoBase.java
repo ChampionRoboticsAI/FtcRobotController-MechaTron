@@ -126,8 +126,13 @@ public abstract class BioBuzzAutoBase extends LinearOpMode {
         // Done (or out of time): stop everything so nothing is powered into the TeleOp transition.
         stepName = timeUp ? "TIME UP - stopped" : "DONE";
         robot.stop();
+        // follower.stop() only switches the follower to IDLE; the motors are not touched until the next
+        // follower.update(). Cut drive power right now, and keep calling update() below so the IDLE
+        // follower keeps the wheels stopped (and the pose telemetry stays live).
         follower.stop();
+        follower.drivetrain.stop();
         while (opModeIsActive()) {
+            follower.update();
             telemetry.addData("Step", stepName);
             telemetry.addData("Finished at", "%.1f s", autoTimer.seconds());
             telemetry.addData("Pose", formatPose(follower.pose()));

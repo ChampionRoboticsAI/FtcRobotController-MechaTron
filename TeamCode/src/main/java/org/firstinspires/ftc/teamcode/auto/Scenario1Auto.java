@@ -55,5 +55,9 @@ public class Scenario1Auto extends BioBuzzAutoBase {
         // 3. Run Path1.
         step("3. Path1");
         followPath(paths().path1(), PATH1_SPEED);
+
+        // 4. Stop the intake.
+        step("4. Stop intake");
+        robot.intake.stop();
     }
 }
