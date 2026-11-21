@@ -50,13 +50,15 @@ All controls are on **gamepad1**, a PlayStation DualSense (wired). Gamepad2 is n
 |---|---|
 | R1 (hold) | **LAUNCH**: full power up while held |
 | R2 (hold) | **DOWN** at full power |
-| Neither | **HOLD**: 20% power keeps the arm down against the rubber band |
+| Neither | **HOLD**: 20% power keeps the arm down against the rubber bands |
 
 - **Start of TeleOp:** the catapult is **IDLE** (no power, braked) so it stays in its initial position.
   Holding power only begins after R1 or R2 is pressed for the first time.
 - **Hold R1 until the arm reaches the top.** Releasing early switches to hold power, which pulls the arm back down mid-swing.
 - **R2 wins** if both R1 and R2 are pressed.
-- The rubber band holds the arm up after a launch. Use R2 to bring it down; the hold power then keeps it down.
+- **Automatic return:** 2 seconds after R1 is released, the arm is pulled down at full power for 0.8 s
+  (`Catapult.PULL_DOWN_SECONDS`), then hold power keeps it down. No need to press R2.
+  Pressing R1 or R2 during the wait cancels the automatic return; R2 still works any time.
 
 ## Flower Arms
 
@@ -75,7 +77,7 @@ The arms have three stages, measured outward from vertical:
 
 - Each press moves one stage; holding the button does not keep moving. Cross at FLAT or Circle at UP does nothing.
 - Both arms move to **UP** when TeleOp starts.
-- Servo positions are set in `FlowerArms.java`. Use the **BioBuzz: Flower Arm Calibration** OpMode to find each arm's UP position.
+- Servo positions are set in `subsystems/FlowerArms.java`. Use the **BioBuzz: Flower Arm Calibration** OpMode to find each arm's UP position.
 
 ## Motor Test Mode
 
@@ -103,17 +105,18 @@ Hold **Create** and lift the robot so the wheels are off the ground.
 
 ## Tuning Values
 
-These constants are at the top of `BioBuzzTeleOp.java`:
+These constants are at the top of `BioBuzzTeleOp.java` (`SLOW_MODE_SCALE`), `subsystems/Intake.java` and `subsystems/Catapult.java`:
 
 | Constant | Value | What it does |
 |---|---|---|
 | `SLOW_MODE_SCALE` | 0.4 | Drive power in slow mode |
-| `INTAKE_IN_POWER` / `INTAKE_OUT_POWER` | 1.0 / -0.9 | Intake speeds |
-| `CATAPULT_UP_POWER` | -1.0 | Launch power (already maximum) |
-| `CATAPULT_DOWN_POWER` | 1.0 | R2 return power |
-| `CATAPULT_HOLD_POWER` | 0.2 | Power that keeps the arm down against the rubber band |
+| `Intake.IN_POWER` / `Intake.OUT_POWER` | 1.0 / -0.9 | Intake speeds |
+| `Catapult.UP_POWER` | -1.0 | Launch power (already maximum) |
+| `Catapult.DOWN_POWER` | 1.0 | R2 return power |
+| `Catapult.HOLD_POWER` | 0.2 | Power that keeps the arm down against the rubber bands |
+| `Catapult.AUTO_DOWN_DELAY_SECONDS` | 2.0 | Wait after releasing R1 before the arm is pulled down automatically |
 
-Flower arm positions are in `FlowerArms.java`:
+Flower arm positions are in `subsystems/FlowerArms.java`:
 
 | Constant | Value | What it does |
 |---|---|---|
