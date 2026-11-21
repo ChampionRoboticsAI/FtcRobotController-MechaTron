@@ -1,8 +1,8 @@
 {
   "version": "2.0.0",
-  "timestamp": "2026-11-20T03:25:53.592Z",
+  "timestamp": "2026-11-20T19:54:44.438Z",
   "startPoint": {
-    "x": 58.5,
+    "x": 83,
     "y": 9.2,
     "locked": false,
     "headingDeg": 90
@@ -19,13 +19,13 @@
       "waitAfterName": "",
       "kind": "atomic",
       "endPoint": {
-        "x": 9.331595190820632,
-        "y": 46.814874452493626
+        "x": 131.59009584779955,
+        "y": 27.500062553980946
       },
       "controlPoints": [
         {
-          "x": 58.46794508142622,
-          "y": 47.00789000059204
+          "x": 81.26142857142857,
+          "y": 18.327619047619045
         }
       ],
       "heading": {
@@ -49,77 +49,6 @@
           ]
         }
       }
-    },
-    {
-      "id": "line-mwmicswn-xbxb7v",
-      "color": "#76b7b2",
-      "name": "",
-      "locked": false,
-      "waitBeforeMs": 0,
-      "waitAfterMs": 0,
-      "waitBeforeName": "",
-      "waitAfterName": "",
-      "kind": "atomic",
-      "endPoint": {
-        "x": 59.9209616318729,
-        "y": 132.19123077380888
-      },
-      "controlPoints": [
-        {
-          "x": 22.55499270924468,
-          "y": 119.19330254770786
-        },
-        {
-          "x": 60.231038115849564,
-          "y": 106.06724977360288
-        }
-      ],
-      "heading": {
-        "type": "tangential",
-        "reverse": true
-      }
-    },
-    {
-      "id": "line-mwmiedgh-l9nija",
-      "color": "#b07aa1",
-      "name": "",
-      "locked": false,
-      "waitBeforeMs": 0,
-      "waitAfterMs": 0,
-      "waitBeforeName": "",
-      "waitAfterName": "",
-      "kind": "atomic",
-      "endPoint": {
-        "x": 9.994670662467858,
-        "y": 111.16978522958885
-      },
-      "controlPoints": [
-        {
-          "x": 36.271442495126706,
-          "y": 112.26218323586744
-        }
-      ],
-      "heading": {
-        "type": "tangential",
-        "reverse": false,
-        "degrees": 0,
-        "startDeg": 0,
-        "endDeg": 0,
-        "piecewiseHeading": {
-          "segments": [
-            {
-              "startProgress": 0,
-              "endProgress": 1,
-              "interpolationType": "linear",
-              "reversed": false,
-              "parameters": {
-                "startDeg": 0,
-                "endDeg": 0
-              }
-            }
-          ]
-        }
-      }
     }
   ],
   "shapes": [
@@ -128,19 +57,19 @@
       "name": "Red HIVE",
       "vertices": [
         {
-          "x": 46,
+          "x": 95.5,
           "y": 50
         },
         {
-          "x": 48.6,
+          "x": 92.9,
           "y": 50
         },
         {
-          "x": 48.6,
+          "x": 92.9,
           "y": 91.4
         },
         {
-          "x": 46,
+          "x": 95.5,
           "y": 91.4
         }
       ],
@@ -152,19 +81,19 @@
       "name": "Blue HIVE",
       "vertices": [
         {
-          "x": 96.5,
+          "x": 45,
           "y": 91.4
         },
         {
-          "x": 93.9,
+          "x": 47.599999999999994,
           "y": 91.4
         },
         {
-          "x": 93.9,
+          "x": 47.599999999999994,
           "y": 50
         },
         {
-          "x": 96.5,
+          "x": 45,
           "y": 50
         }
       ],
@@ -176,23 +105,23 @@
       "name": "Scoring-Side FLOWER",
       "vertices": [
         {
-          "x": 43.4,
+          "x": 98.1,
           "y": 141.5
         },
         {
-          "x": 50.1,
+          "x": 91.4,
           "y": 141.5
         },
         {
-          "x": 50.1,
+          "x": 91.4,
           "y": 139.4
         },
         {
-          "x": 46.75,
+          "x": 94.75,
           "y": 137.7
         },
         {
-          "x": 43.4,
+          "x": 98.1,
           "y": 139.4
         }
       ],
@@ -204,23 +133,23 @@
       "name": "Blue Alliance FLOWER",
       "vertices": [
         {
-          "x": 141.5,
+          "x": 0,
           "y": 98.1
         },
         {
-          "x": 139.4,
+          "x": 2.0999999999999943,
           "y": 98.1
         },
         {
-          "x": 137.7,
+          "x": 3.8000000000000114,
           "y": 94.75
         },
         {
-          "x": 139.4,
+          "x": 2.0999999999999943,
           "y": 91.4
         },
         {
-          "x": 141.5,
+          "x": 0,
           "y": 91.4
         }
       ],
@@ -232,23 +161,23 @@
       "name": "Audience-Side FLOWER",
       "vertices": [
         {
-          "x": 91.15,
+          "x": 50.349999999999994,
           "y": 0
         },
         {
-          "x": 97.8,
+          "x": 43.7,
           "y": 0
         },
         {
-          "x": 97.8,
+          "x": 43.7,
           "y": 2.1
         },
         {
-          "x": 94.5,
+          "x": 47,
           "y": 3.8
         },
         {
-          "x": 91.15,
+          "x": 50.349999999999994,
           "y": 2.1
         }
       ],
@@ -260,23 +189,23 @@
       "name": "Red Alliance FLOWER",
       "vertices": [
         {
-          "x": 0,
+          "x": 141.5,
           "y": 50.35
         },
         {
-          "x": 2.1,
+          "x": 139.4,
           "y": 50.35
         },
         {
-          "x": 3.8,
+          "x": 137.7,
           "y": 47
         },
         {
-          "x": 2.1,
+          "x": 139.4,
           "y": 43.65
         },
         {
-          "x": 0,
+          "x": 141.5,
           "y": 43.65
         }
       ],
@@ -288,14 +217,6 @@
     {
       "kind": "path",
       "lineId": "line-mvvg4b7g-uwy94u"
-    },
-    {
-      "kind": "path",
-      "lineId": "line-mwmicswn-xbxb7v"
-    },
-    {
-      "kind": "path",
-      "lineId": "line-mwmiedgh-l9nija"
     }
   ],
   "fieldPoints": [],
